@@ -21,15 +21,14 @@ const Users = sequelize.define('Users', {
         type: DataTypes.STRING(255),
         allowNull: false,
     },
-    full_name: {
-        type: DataTypes.VIRTUAL,
-        get() {
-            return `${this.first_name} ${this.last_name}`;
-        }
-    },
     college_name: {
         type: DataTypes.TEXT('long'),
         allowNull: false,
+    },
+    roll_no: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        unique: true,
     },
     username: {
         type: DataTypes.STRING(255),
@@ -51,6 +50,7 @@ const Users = sequelize.define('Users', {
     account_type: {
         type: DataTypes.ENUM('student', 'mentor'),
         allowNull: false,
+        defaultValue: 'student',
     },
     expertise: {
         type: DataTypes.TEXT('long'),
@@ -73,6 +73,7 @@ const Users = sequelize.define('Users', {
         { name: 'username_index', fields: ['username'], unique: true },
         { name: 'socket_id_index', fields: ['socket_id'], unique: true },
         { name: 'email_index', fields: ['email'], unique: true },
+        { name: 'rollno_index', fields: ['roll_no'], unique: true },
         { name: 'status_index', fields: ['status'] },
         { name: 'account_type_index', fields: ['account_type'] },
     ]
