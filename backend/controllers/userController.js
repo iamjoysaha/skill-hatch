@@ -1,4 +1,5 @@
 import { Op } from 'sequelize'
+import bcrypt from 'bcrypt'
 import { Users } from '../models/index.js'
 
 async function createUser({ socket_id, first_name, last_name, college_name, roll_no, email, username, password, account_type, expertise }) {
@@ -8,7 +9,9 @@ async function createUser({ socket_id, first_name, last_name, college_name, roll
             return { success: false, message: 'User already exists!' }
         }
 
-        user = await Users.create({ socket_id, first_name, last_name, college_name, roll_no, username, email, password, account_type, expertise })
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        user = await Users.create({ socket_id, first_name, last_name, college_name, roll_no, username, email, password: hashedPassword, account_type, expertise })
         return user ? 
             { success: true, message: 'Registration successful!', user } : 
             { success: false, message: 'Registration failed!'}
@@ -40,9 +43,13 @@ async function updateSocket({ user_id, socket_id }) {
 
 async function loginUser({ email, password }) {
     try {
-        const user = await Users.findOne({ where: { email, password } })
+        const user = await Users.findOne({ where: { email } })
         if (!user) 
             return { success: false, message: 'User not found!' }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) 
+            return { success: false, message: 'Invalid password!' }
 
         return { success: true, message: 'Login successful!', user }
     } 

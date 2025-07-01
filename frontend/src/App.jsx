@@ -1,57 +1,66 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { io } from 'socket.io-client'
-import { useMemo, useEffect } from 'react';
-import { useState } from 'react';
-import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import { AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
 
 import Registration from './components/Registration';
 import Login from './components/Login';
 import Home from './components/Home';
+import ProtectedRoute from './ProtectedRoute';
+import Loader from './Loader';
+import Animate from './Animate';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
-  const socket = useMemo(()=> io('http://localhost:3000'), [])
-  const [socketId, setSocketId] = useState('')
+  const socket = useMemo(() => io(import.meta.env.VITE_BACKEND_URL), []);
+  const [socketId, setSocketId] = useState('');
 
   useEffect(() => {
     socket.on('connect', () => {
-      console.log('connected!')
-      console.log('Your socket id: ', socket.id)
+      setSocketId(socket.id);
+      localStorage.setItem('socketId', socket.id);
+    });
 
-      setSocketId(socket.id)
-
-      const userId = localStorage.getItem('userId')
-      console.log(userId)
-
-      if (userId) {
-        axios.put('http://localhost:3000/api/user/socket', {
-          user_id: userId,
-          socket_id: socket.id
-        })
-        .then(() => {
-          console.log('Socket ID updated on reconnect')
-        })
-        .catch((err) => {
-          console.error('Error updating socket ID:', err)
-        })
-      }
-    })
+    socket.on('disconnect', () => {
+      localStorage.removeItem('socketId');
+      localStorage.removeItem('userId');
+      setSocketId('');
+    });
 
     return () => {
-      socket.off('connect')
-    }
-  }, [socket])
+      socket.off('connect');
+      socket.off('disconnect');
+    };
+  }, [socket]);
+
+  if (!socketId) return <Loader />;
 
   return (
     <Router>
-      <div className="app-container">
+      <AnimatePresence mode="wait">
         <Routes>
-          <Route path="/" element={<Registration socket={socket} socketId={socketId} />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Registration />} />
+          <Route path="/user/login" element={<Login socketId={socketId} />} />
+          <Route
+            path="/user/home"
+            element={
+              <ProtectedRoute>
+                  <Navbar />
+                  <Animate>
+                    <main className="flex-1 bg-gray-50 pt-16">
+                      <Home socketId={socketId} />
+                    </main>
+                  </Animate>
+                  <Footer />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-      </div>
+      </AnimatePresence>
     </Router>
   );
 }
 
-export default App;
+export default App

@@ -25,7 +25,10 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }))
 app.use(flash())
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}))
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')
     res.setHeader('Pragma', 'no-cache')
@@ -36,7 +39,7 @@ app.use((req, res, next) => {
 // Socket.IO setup
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http://localhost:5173',
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST'],
         credentials: true,
     },
