@@ -1,7 +1,6 @@
 import axios from "axios"
 import Cookies from 'js-cookie'
 import toast from 'react-hot-toast'
-import { v4 as uuid4 } from 'uuid'
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -19,7 +18,6 @@ export default function Registration() {
     roll_no: "",
     expertise: "",
     college_name: "",
-    socket_id: "",
   })
 
   const [showPassword, setShowPassword] = useState(false)
@@ -27,7 +25,7 @@ export default function Registration() {
 
   useEffect(() => {
     Cookies.remove('token')
-    setFormData((prev) => ({ ...prev, socket_id: uuid4() }))
+    setFormData((prev) => ({ ...prev }))
   }, [])
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -38,8 +36,15 @@ export default function Registration() {
       return toast.error("Passwords do not match!")
     }
 
+    const payload = { ...formData }
+    if (formData.account_type === "student") {
+      delete payload.expertise
+    } else {
+      delete payload.roll_no
+    }
+
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/create`, formData)
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/create`, payload)
 
       if (data.success) {
         toast.success(data.message)
@@ -47,7 +52,8 @@ export default function Registration() {
       } else {
         toast.error(data.message)
       }
-    } catch (error) {
+    } 
+    catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong while registering!")
     }
   }
@@ -198,7 +204,7 @@ export default function Registration() {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-[#f4c150] text-[#2e2b5f] font-semibold py-2.5 rounded-md hover:bg-yellow-400 transition transform hover:-translate-y-1 text-sm"
+              className="w-full bg-[#2e2b5f] text-white hover:bg-[#1a1a1a] font-semibold py-2.5 rounded-md transition transform hover:-translate-y-1 text-sm"
             >
               Register
             </button>

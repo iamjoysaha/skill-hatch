@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-export default function Login({ socketId }) {
+export default function Login() {
   const navigate = useNavigate()
 
-  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [formData, setFormData] = useState({ email: '', phone: '', password: '' })
+  const [otp, setOtp] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showForgotForm, setShowForgotForm] = useState(false)
+  const [showOtpCard, setShowOtpCard] = useState(false)
 
   useEffect(() => {
     Cookies.remove('token')
@@ -18,36 +21,61 @@ export default function Login({ socketId }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`, { email: formData.email, password: formData.password }, { withCredentials: true })
+      if (data.success) {
+        localStorage.setItem('userId', data.user.id)
+        console.log(data)
+        toast.success(data.message)
+        navigate('/user/home')
+      }
+    } 
+    catch (error) {
+      toast.error(error.response?.data?.message || 'Login failed!')
+    }
+
+    setFormData({ ...formData, password: '' })
+  }
+
+  const handleSendOtp = async () => {
+    if (!formData.email || !formData.phone) {
+      return toast.error('Enter both email and phone!')
+    }
 
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/login`,
-        formData,
+        `${import.meta.env.VITE_BACKEND_URL}/verify/send-otp`,
+        { email: formData.email, phone: formData.phone }
+      )
+      toast.success(data.message)
+      setShowOtpCard(true)
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to send OTP')
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/verify/verify-otp`,
+        { email: formData.email, otp },
         { withCredentials: true }
       )
 
       if (data.success) {
         localStorage.setItem('userId', data.user.id)
 
-        axios
-          .put(`${import.meta.env.VITE_BACKEND_URL}/user/socket`, {
-            user_id: data.user.id,
-            socket_id: socketId,
-          })
-          .catch((error) => console.error('Error updating socket ID:', error))
-
         toast.success(data.message)
         navigate('/user/home')
-      } else {
+      } 
+      else {
         toast.error(data.message)
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Something went wrong while login!')
+      toast.error(error.response?.data?.message || 'OTP verification failed')
     }
-
-    setFormData({ email: '', password: '' })
   }
 
   return (
@@ -75,60 +103,125 @@ export default function Login({ socketId }) {
               className="h-24 rounded-full object-cover"
             />
           </div>
+
           <h2 className="text-xl font-bold text-center text-primary mb-1">Log In</h2>
           <p className="text-center text-sm text-secondary mb-6">Access your SkillHatch account</p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-secondary mb-1">Email</label>
+          {/* Login Form */}
+          {!showForgotForm && (
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-secondary mb-1">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email address"
+                  className="w-full p-3 border border-gray-200 rounded-md shadow-sm text-sm"
+                  required
+                />
+              </div>
+
+              <div className="mb-6 relative">
+                <label className="block text-sm font-medium text-secondary mb-1">Password</label>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className="w-full p-3 border border-gray-200 rounded-md shadow-sm text-sm"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-9 text-gray-500 hover:text-[#2e2b5f]"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#2e2b5f] text-white hover:bg-[#1a1a1a] font-semibold py-2.5 rounded-md transition transform hover:-translate-y-1 text-sm"
+              >
+                Log In
+              </button>
+            </form>
+          )}
+
+          {/* Forgot Password Card */}
+          {showForgotForm && !showOtpCard && (
+            <div className="mt-4">
+              <h3 className="text-center font-medium text-secondary mb-4">Forgot Password</h3>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email address"
-                className="w-full p-3 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2e2b5f] text-sm"
-                required
+                placeholder="Email"
+                className="w-full p-2 mb-3 border rounded-md text-sm"
               />
-            </div>
-
-            <div className="mb-6 relative">
-              <label className="block text-sm font-medium text-secondary mb-1">Password</label>
               <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
+                type="tel"
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
-                placeholder="Password"
-                className="w-full p-3 border border-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2e2b5f] text-sm"
-                required
+                placeholder="Phone Number"
+                className="w-full p-2 mb-3 border rounded-md text-sm"
               />
               <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-[#2e2b5f]"
+                onClick={handleSendOtp}
+                className="w-full bg-[#2e2b5f] text-white py-2 rounded hover:bg-[#1a1a1a] transition"
               >
-                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                Send OTP
               </button>
             </div>
+          )}
 
-            <button
-              type="submit"
-              className="w-full bg-[#f4c150] text-[#2e2b5f] font-semibold py-2.5 rounded-md hover:bg-yellow-400 transition transform hover:-translate-y-1 text-sm"
-            >
-              Log In
-            </button>
-          </form>
+          {/* OTP Verification Card */}
+          {showOtpCard && (
+            <div className="mt-4">
+              <h3 className="text-center font-medium text-secondary mb-4">Enter OTP</h3>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+                className="w-full p-2 mb-3 border rounded-md text-sm"
+              />
+              <button
+                onClick={handleVerifyOtp}
+                className="w-full bg-[#2e2b5f] text-white py-2 rounded hover:bg-[#1a1a1a] transition"
+              >
+                Verify & Log In
+              </button>
+            </div>
+          )}
 
-          <p className="text-center text-sm text-secondary mt-6">
-            Don’t have an account?{' '}
-            <button
-              className="text-[#f4c150] hover:text-yellow-400 font-medium underline"
-              onClick={() => navigate('/')}
-            >
-              Register
-            </button>
-          </p>
+          <div className="text-center text-sm text-secondary mt-6">
+            <p>
+              Don’t have an account?{' '}
+              <button
+                className="text-[#f4c150] hover:text-yellow-400 font-medium underline"
+                onClick={() => navigate('/')}
+              >
+                Register
+              </button>
+            </p>
+            <p className="mt-3">
+              {!showForgotForm && (
+                <button
+                  className="text-[#2e2b5f] hover:text-[#1a1a1a] font-medium underline"
+                  onClick={() => setShowForgotForm(true)}
+                >
+                  Forgot Password?
+                </button>
+              )}
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,23 +1,15 @@
-import axios from "axios"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 
-export default function Home({ socketId }) {
+export default function Home() {
   useEffect(() => {
-    const userId = localStorage.getItem("userId")
-    if (userId && socketId) {
-      axios
-        .put(`${import.meta.env.VITE_BACKEND_URL}/user/socket`, {
-          user_id: userId,
-          socket_id: socketId,
-        })
-        .then(() => {
-          console.log("Socket ID updated on reconnect")
-        })
-        .catch((error) => {
-          console.error("Error updating socket ID:", error)
-        })
+    const hasReloaded = sessionStorage.getItem("reloaded")
+    if (!hasReloaded) {
+      sessionStorage.setItem("reloaded", "true")
+      window.location.reload()
+    } else {
+      sessionStorage.removeItem("reloaded")
     }
-  }, [socketId])
+  }, [])
 
   return (
     <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">

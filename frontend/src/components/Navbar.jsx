@@ -1,18 +1,33 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import Cookies from 'js-cookie'
+import axios from 'axios'
 
 export default function Navbar() {
   const location = useLocation()
+  const navigate = useNavigate()
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  const handleLogout = () => {
-    Cookies.remove('token')
-    localStorage.removeItem('socketId')
-    localStorage.removeItem('userId')
-    toast.success('Logged out successfully')
-    window.location.href = '/user/login'
+
+  const handleLogout = async (e) => {
+    e.preventDefault()
+
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {}, { withCredentials: true })
+
+      Cookies.remove('token')
+      localStorage.removeItem('socketId')
+      localStorage.removeItem('userId')
+
+      toast.success(data.message)
+      navigate('/user/login')
+    } 
+    catch (error) {
+      console.error('Logout failed:', error)
+      toast.error('Logout failed!')
+    }
   }
 
   useEffect(() => {
@@ -24,7 +39,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
-          <Link to="/user/home" className="flex items-center gap-2">
+          <Link to="/user/profile" className="flex items-center gap-2">
             <img
               src="https://instaily.com/_next/static/media/test.b3910688.jpg"
               alt="Logo"
@@ -38,7 +53,7 @@ export default function Navbar() {
             <NavLink to="/user/home" label="Dashboard" current={location.pathname === '/user/home'} />
             <NavLink to="#" label="Roadmaps" />
             <NavLink to="#" label="Mentors" />
-            <NavLink to="#" label="Chat" />
+            <NavLink to="/user/chats" label="Chat" />
             <NavLink to="#" label="Progress" />
             <button
               onClick={handleLogout}

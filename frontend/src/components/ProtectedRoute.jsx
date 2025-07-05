@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/verify-token`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify/verify-token`, {
           withCredentials: true
         })
 
@@ -22,7 +22,8 @@ export default function ProtectedRoute({ children }) {
           setErrorMessage(res.data.message || 'Authentication failed.')
           setIsAuthenticated(false)
         }
-      } catch (err) {
+      } 
+      catch (err) {
         const message = err.response?.data?.message || 'You must log in to access this page.'
         setErrorMessage(message)
         setIsAuthenticated(false)

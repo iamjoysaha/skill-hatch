@@ -7,12 +7,6 @@ const Users = sequelize.define('Users', {
         autoIncrement: true,
         primaryKey: true,
     },
-    socket_id: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-        defaultValue: '',
-        unique: true,
-    },
     first_name: {
         type: DataTypes.STRING(255),
         allowNull: false,
@@ -71,7 +65,6 @@ const Users = sequelize.define('Users', {
     tableName: 'users',
     indexes: [
         { name: 'username_index', fields: ['username'], unique: true },
-        { name: 'socket_id_index', fields: ['socket_id'], unique: true },
         { name: 'email_index', fields: ['email'], unique: true },
         { name: 'rollno_index', fields: ['roll_no'], unique: true },
         { name: 'status_index', fields: ['status'] },

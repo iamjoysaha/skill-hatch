@@ -2,65 +2,55 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { io } from 'socket.io-client';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-
-import Registration from './components/Registration';
-import Login from './components/Login';
-import Home from './components/Home';
-import ProtectedRoute from './ProtectedRoute';
-import Loader from './Loader';
-import Animate from './Animate';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { Chats, Home, Loader, Login, Profile, ProtectedRoute, Registration, Layout } from './components/index'
 
 function App() {
-  const socket = useMemo(() => io(import.meta.env.VITE_BACKEND_URL), []);
-  const [socketId, setSocketId] = useState('');
+  const userId = localStorage.getItem("userId")
+  const socket = useMemo(() => io(import.meta.env.VITE_BACKEND_URL, { query: { userId } }), [userId])
+
+  const [socketId, setSocketId] = useState(0)
 
   useEffect(() => {
     socket.on('connect', () => {
-      setSocketId(socket.id);
-      localStorage.setItem('socketId', socket.id);
-    });
+      console.log(`User connected: ${socket.id}`)
+      setSocketId(socket.id)
+      localStorage.setItem('socketId', socket.id)
+
+      socket.emit("join", { userId })
+    })
 
     socket.on('disconnect', () => {
-      localStorage.removeItem('socketId');
-      localStorage.removeItem('userId');
-      setSocketId('');
-    });
+      localStorage.removeItem('socketId')
+      localStorage.removeItem('userId')
+      setSocketId('')
+    })
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, [socket]);
+      socket.off('connect')
+      socket.off('disconnect')
+    }
+  }, [socket])
 
-  if (!socketId) return <Loader />;
+  if (userId && !socketId) return <Loader />
 
   return (
     <Router>
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<Registration />} />
-          <Route path="/user/login" element={<Login socketId={socketId} />} />
-          <Route
-            path="/user/home"
-            element={
-              <ProtectedRoute>
-                  <Navbar />
-                  <Animate>
-                    <main className="flex-1 bg-gray-50 pt-16">
-                      <Home socketId={socketId} />
-                    </main>
-                  </Animate>
-                  <Footer />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/user/login" element={<Login />} />
+
+          <Route path="/user" element={ <ProtectedRoute><Layout /></ProtectedRoute> }>
+            <Route path="home" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="chats" element={<Chats socket={socket} />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AnimatePresence>
     </Router>
-  );
+  )
 }
 
 export default App

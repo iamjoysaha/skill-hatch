@@ -1,12 +1,18 @@
 import { 
     createUser,
-    updateSocket,
     loginUser,
+    getUserByEmail,
+    getAllUsers,
+    getUsersByAccountType,
+    updateLastActive,
 } from './userController.js'
 
 
 export {
     createUser,
-    updateSocket,
     loginUser,
+    getUserByEmail,
+    getAllUsers,
+    getUsersByAccountType,
+    updateLastActive,
 }
