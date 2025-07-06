@@ -6,7 +6,7 @@ export default function Layout() {
     <>
       <Navbar />
       <Animate>
-        <main className="flex-1 bg-gray-50 pt-4 sm:pt-6 lg:pt-8">
+        <main className="flex-1 bg-gray-100 pt-4 sm:pt-6 lg:pt-8">
           <Outlet />
         </main>
       </Animate>

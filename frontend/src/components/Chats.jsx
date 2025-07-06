@@ -35,6 +35,7 @@ export default function Chats({ socket }) {
     }
 
     fetchMentors()
+
     const interval = setInterval(fetchMentors, 5000)
     return () => clearInterval(interval)
   }, [])
@@ -48,7 +49,7 @@ export default function Chats({ socket }) {
       return
 
     const receiveMessage = ({ from, to, text, timestamp }) => {
-      const targetId = from === userId ? to : from;
+      const targetId = from === userId ? to : from
       const msg = {
         id: Date.now(),
         mentorId: targetId,
@@ -66,11 +67,10 @@ export default function Chats({ socket }) {
         setUnreadCounts((prev) => ({
           ...prev,
           [targetId]: (prev[targetId] || 0) + 1,
-        }));
-
+        }))
         if (from !== userId && messageSoundRef.current) {
           messageSoundRef.current.currentTime = 0
-          messageSoundRef.current.play().catch(() => {})
+          messageSoundRef.current.play().catch((err) => console.error("Sound play error:", err))
         }
       }
     }
@@ -86,8 +86,8 @@ export default function Chats({ socket }) {
     )
 
     return () => {
-      socket.off("receive_message", receiveMessage);
-      socket.off("typing");
+      socket.off("receive_message", receiveMessage)
+      socket.off("typing")
       socket.off("stop_typing")
     }
   }, [socket, selectedMentor])
@@ -134,9 +134,7 @@ export default function Chats({ socket }) {
       <audio ref={messageSoundRef} src={notifySound} preload="auto" />
       <div className="flex flex-col sm:flex-row h-full rounded-2xl shadow-lg bg-white overflow-hidden relative">
         {/* Sidebar */}
-        <div className={`absolute sm:static inset-0 z-20 bg-white sm:w-80 transition-transform duration-300 ease-in-out ${
-          selectedMentor ? "translate-x-full sm:translate-x-0" : "translate-x-0"
-        }`}>
+        <div className={`absolute sm:static inset-0 z-20 bg-white sm:w-80 transition-transform duration-300 ease-in-out ${selectedMentor ? "translate-x-full sm:translate-x-0" : "translate-x-0"}`}>
           <div className="p-4 shadow-md bg-white sticky top-0 z-10 flex items-center gap-3">
             {selectedMentor && (
               <button onClick={() => setSelectedMentor(null)} className="sm:hidden text-gray-500 p-2">
@@ -153,16 +151,14 @@ export default function Chats({ socket }) {
               <div
                 key={mentor.id}
                 onClick={() => {
-                  setSelectedMentor(mentor);
-                  setUnreadCounts((prev) => ({ ...prev, [mentor.id]: 0 }));
+                  setSelectedMentor(mentor)
+                  setUnreadCounts((prev) => ({ ...prev, [mentor.id]: 0 }))
                 }}
-                className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition ${
-                  selectedMentor?.id === mentor.id ? "bg-blue-50 shadow-sm" : ""
-                }`}
+                className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition ${selectedMentor?.id === mentor.id ? "bg-blue-50 shadow-sm" : ""}`}
               >
                 <div className="relative mr-3">
                   <img
-                    src="https://instaily.com/_next/static/media/test.b3910688.jpg"
+                    src={mentor.profile_image || "https://instaily.com/_next/static/media/test.b3910688.jpg"}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   {mentor.online && (
@@ -184,9 +180,7 @@ export default function Chats({ socket }) {
         </div>
 
         {/* Chat Area */}
-        <div className={`flex-1 flex flex-col bg-gradient-to-tr from-white to-indigo-50 ${
-          selectedMentor ? "translate-x-0" : "sm:translate-x-0 -translate-x-full sm:flex"
-        }`}>
+        <div className={`flex-1 flex flex-col bg-gradient-to-tr from-white to-indigo-50 ${selectedMentor ? "translate-x-0" : "sm:translate-x-0 -translate-x-full sm:flex"}`}>
           {selectedMentor ? (
             <>
               {/* Header with Close Button */}
@@ -194,7 +188,7 @@ export default function Chats({ socket }) {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <img
-                      src="https://instaily.com/_next/static/media/test.b3910688.jpg"
+                      src={selectedMentor.profile_image || "https://instaily.com/_next/static/media/test.b3910688.jpg"}
                       alt=""
                       className="w-10 h-10 rounded-full object-cover"
                     />
@@ -222,9 +216,7 @@ export default function Chats({ socket }) {
                   <span className="px-3 py-1 rounded-full bg-white text-gray-500 text-xs shadow">Today</span>
                 </div>
                 {selectedMessages.map((msg) => (
-                  <div key={msg.id} className={`max-w-[70%] px-4 py-3 rounded-xl shadow-md ${
-                    msg.sender === "You" ? "ml-auto bg-yellow-100 text-right" : "mr-auto bg-white text-left"
-                  }`}>
+                  <div key={msg.id} className={`max-w-[70%] px-4 py-3 rounded-xl shadow-md ${msg.sender === "You" ? "ml-auto bg-yellow-100 text-right" : "mr-auto bg-white text-left"}`}>
                     <p className="text-gray-700">{msg.text}</p>
                     <span className="block mt-1 text-xs text-gray-500">{msg.timestamp}</span>
                   </div>

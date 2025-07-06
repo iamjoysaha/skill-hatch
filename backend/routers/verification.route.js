@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import { isAuthenticated } from '../middlewares/auth.js'
 import { sendMail, sendOtpSms } from '../services/index.js'
 import { getUserByEmail } from '../controllers/userController.js'

@@ -78,7 +78,8 @@ async function getAllUsers() {
 
 async function getUsersByAccountType(account_type) {
     try {
-        const users = await Users.findAll()
+        // const users = await Users.findAll({ where: { account_type }})
+        const users = await Users.findAll() // for testing
         if (!users.length)
             return { success: false, message: 'Users not found!' }
 
@@ -96,7 +97,7 @@ async function updateLastActive(user_id) {
         return { success: false, message: 'User ID is required' }
 
     try {
-        const user = await Users.findByPk(user_id);
+        const user = await Users.findByPk(user_id)
         if (!user)
             return { success: false, message: 'User not found' }
 
@@ -111,6 +112,51 @@ async function updateLastActive(user_id) {
     }
 }
 
+async function getUserById(user_id) {
+    try {
+        const user = await Users.findByPk(user_id)
+        if (!user)
+            return { success: false, message: 'User not found!' }
+
+        return { success: true, message: 'User found!', user }
+    } 
+    catch (error) {
+        console.error(error)
+        console.log('\n:::Exception occurred inside getUser! :::\n')
+        return { success: false, message: 'Failed to get the user!' }
+    }
+}
+
+async function updateUserById(user_id, updatedData) {
+    try {
+        const user = await Users.findByPk(user_id)
+        if (!user)
+            return { success: false, message: 'User not found!' }
+
+        await user.update(updatedData)
+        return { success: true, message: 'Profile updated successfully!', user }
+    } 
+    catch (error) {
+        console.error(error)
+        console.log('\n:::Exception occurred inside updateUserById! :::\n')
+        return { success: false, message: 'Failed to update the user!' }
+    }
+}
+
+async function deleteUserById(id) {
+    try {
+        const user = await Users.destroy({ where: { id } })
+        
+        return user ? 
+            { success: true, message: 'User got deleted!' } : 
+            { success: false, message: 'Unable to delete user!' }
+    }
+    catch (error) {
+        console.log('Exception occurred inside deleteUserById!\n', error)
+        return { success: false, message: 'Exception:::: Unable to delete user!' }
+    }
+}
+
 export {
     createUser,
     loginUser,
@@ -118,4 +164,7 @@ export {
     getAllUsers,
     getUsersByAccountType,
     updateLastActive,
+    getUserById,
+    updateUserById,
+    deleteUserById,
 }

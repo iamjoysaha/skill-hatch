@@ -1,37 +1,37 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
-import { AnimatePresence } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
-import { Chats, Home, Loader, Login, Profile, ProtectedRoute, Registration, Layout } from './components/index'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { io } from 'socket.io-client'
+import { AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { Chats, Home, Login, Profile, ProtectedRoute, Registration, Layout } from './components/index'
 
 function App() {
   const userId = localStorage.getItem("userId")
-  const socket = useMemo(() => io(import.meta.env.VITE_BACKEND_URL, { query: { userId } }), [userId])
-
-  const [socketId, setSocketId] = useState(0)
+  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log(`User connected: ${socket.id}`)
-      setSocketId(socket.id)
-      localStorage.setItem('socketId', socket.id)
+    if (!userId) return
 
-      socket.emit("join", { userId })
+    const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
+      query: { userId }
     })
 
-    socket.on('disconnect', () => {
+    setSocket(newSocket)
+
+    newSocket.on('connect', () => {
+      console.log(`User connected: ${newSocket.id}`)
+      localStorage.setItem('socketId', newSocket.id)
+      newSocket.emit("join", { userId })
+    })
+
+    newSocket.on('disconnect', () => {
       localStorage.removeItem('socketId')
       localStorage.removeItem('userId')
-      setSocketId('')
     })
 
     return () => {
-      socket.off('connect')
-      socket.off('disconnect')
+      newSocket.disconnect()
     }
-  }, [socket])
-
-  if (userId && !socketId) return <Loader />
+  }, [userId])
 
   return (
     <Router>
@@ -40,8 +40,15 @@ function App() {
           <Route path="/" element={<Registration />} />
           <Route path="/user/login" element={<Login />} />
 
-          <Route path="/user" element={ <ProtectedRoute><Layout /></ProtectedRoute> }>
-            <Route path="home" element={<Home />} />
+          <Route
+            path="/user"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="home" element={<Home socket={socket} />} />
             <Route path="profile" element={<Profile />} />
             <Route path="chats" element={<Chats socket={socket} />} />
           </Route>

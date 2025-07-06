@@ -59,35 +59,38 @@ export default function Registration() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Left Side */}
-      <div className="w-full lg:w-1/2 min-h-[300px] bg-cover bg-center relative" style={{ backgroundImage: `url(https://instaily.com/_next/static/media/test.b3910688.jpg)` }}>
-        <div className="absolute inset-0 bg-[#2e2b5f]/70 flex items-center justify-center p-6">
+      <div
+        className="w-full lg:w-1/2 min-h-[300px] bg-cover bg-center relative"
+        style={{ backgroundImage: `url(https://instaily.com/_next/static/media/test.b3910688.jpg)` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/80 flex items-center justify-center p-6">
           <div className="text-center text-white max-w-md animate-fadeIn">
-            <h1 className="text-3xl font-bold mb-4">Welcome to SkillHatch</h1>
-            <p>Join our community of learners and mentors to unlock your potential and share knowledge.</p>
+            <h1 className="text-4xl font-extrabold mb-4 tracking-tight">Welcome to SkillHatch</h1>
+            <p className="text-lg leading-relaxed">Join our vibrant community to unlock your potential and share knowledge.</p>
           </div>
         </div>
       </div>
 
       {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center bg-neutral px-6 py-12">
-        <div className="w-full max-w-xl bg-white p-8 rounded-xl shadow-lg animate-slideUp">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-xl bg-white p-8 rounded-2xl shadow-2xl animate-slideUp border border-gray-100">
           <div className="flex justify-center mb-6">
             <img
               src="https://instaily.com/_next/static/media/test.b3910688.jpg"
               alt="SkillHatch Logo"
-              className="h-20 rounded-full object-cover"
+              className="h-28 rounded-full object-cover border-4 border-gray-100 shadow-md"
             />
           </div>
-          <h2 className="text-xl font-bold text-center text-primary mb-1">Create Your Account</h2>
-          <p className="text-center text-sm text-secondary mb-6">Start your learning or mentoring journey today!</p>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Create Your Account</h2>
+          <p className="text-center text-sm text-gray-500 mb-8">Start your learning or mentoring journey today!</p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Account Type */}
             <div>
-              <label className="block text-sm font-medium text-secondary mb-2">Account Type</label>
-              <div className="flex gap-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Account Type</label>
+              <div className="flex gap-6">
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -95,9 +98,10 @@ export default function Registration() {
                     value="student"
                     checked={formData.account_type === "student"}
                     onChange={handleChange}
+                    className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
                     required
                   />
-                  <span className="text-sm">Student</span>
+                  <span className="text-sm text-gray-700">Student</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -106,9 +110,10 @@ export default function Registration() {
                     value="mentor"
                     checked={formData.account_type === "mentor"}
                     onChange={handleChange}
+                    className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300"
                     required
                   />
-                  <span className="text-sm">Mentor</span>
+                  <span className="text-sm text-gray-700">Mentor</span>
                 </label>
               </div>
             </div>
@@ -116,65 +121,121 @@ export default function Registration() {
             {/* Name Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-secondary mb-1">First Name</label>
-                <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="First name" required />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                <input
+                  type="text"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                  placeholder="First name"
+                  required
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-secondary mb-1">Last Name</label>
-                <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="Last name" required />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                  placeholder="Last name"
+                  required
+                />
               </div>
             </div>
 
             {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Username</label>
-              <input type="text" name="username" value={formData.username} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="Username" required />
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                placeholder="Username"
+                required
+              />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="Email address" required />
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                placeholder="Email address"
+                required
+              />
             </div>
 
             {/* College Name */}
             <div>
-              <label className="block text-sm font-medium text-secondary mb-1">College Name</label>
-              <input type="text" name="college_name" value={formData.college_name} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="Enter College Name" required />
+              <label className="block text-sm font-semibold text-gray-700 mb-2">College Name</label>
+              <input
+                type="text"
+                name="college_name"
+                value={formData.college_name}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                placeholder="Enter College Name"
+                required
+              />
             </div>
 
             {/* Roll No (for Student) */}
             {formData.account_type === "student" && (
               <div>
-                <label className="block text-sm font-medium text-secondary mb-1">Roll No</label>
-                <input type="text" name="roll_no" value={formData.roll_no} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="Enter Roll No" required />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Roll No</label>
+                <input
+                  type="text"
+                  name="roll_no"
+                  value={formData.roll_no}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                  placeholder="Enter Roll No"
+                  required
+                />
               </div>
             )}
 
             {/* Expertise (for Mentor) */}
             {formData.account_type === "mentor" && (
               <div>
-                <label className="block text-sm font-medium text-secondary mb-1">Expertise</label>
-                <input type="text" name="expertise" value={formData.expertise} onChange={handleChange} className="w-full p-3 border rounded-md text-sm" placeholder="e.g., Web Development" required />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Expertise</label>
+                <input
+                  type="text"
+                  name="expertise"
+                  value={formData.expertise}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
+                  placeholder="e.g., Web Development"
+                  required
+                />
               </div>
             )}
 
             {/* Password */}
             <div className="relative">
-              <label className="block text-sm font-medium text-secondary mb-1">Password</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-md text-sm"
+                className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
                 placeholder="Password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-[#2e2b5f]"
+                className="absolute right-3 top-10 text-gray-500 hover:text-gray-900 transition"
               >
                 <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
               </button>
@@ -182,20 +243,20 @@ export default function Registration() {
 
             {/* Confirm Password */}
             <div className="relative">
-              <label className="block text-sm font-medium text-secondary mb-1">Confirm Password</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-md text-sm"
+                className="w-full p-3 border border-gray-200 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
                 placeholder="Confirm Password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-[#2e2b5f]"
+                className="absolute right-3 top-10 text-gray-500 hover:text-gray-900 transition"
               >
                 <i className={`fas ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
               </button>
@@ -204,17 +265,17 @@ export default function Registration() {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-[#2e2b5f] text-white hover:bg-[#1a1a1a] font-semibold py-2.5 rounded-md transition transform hover:-translate-y-1 text-sm"
+              className="w-full bg-gray-900 text-white hover:bg-gray-800 font-semibold py-3 rounded-lg transition transform hover:-translate-y-1 shadow-md text-sm"
             >
               Register
             </button>
           </form>
 
-          <p className="text-center text-sm text-secondary mt-6">
+          <p className="text-center text-sm text-gray-500 mt-8">
             Already have an account?{' '}
             <button
               onClick={() => navigate("/user/login")}
-              className="text-[#f4c150] hover:text-yellow-400 font-medium underline"
+              className="text-amber-500 hover:text-amber-600 font-semibold underline transition"
             >
               Log in
             </button>

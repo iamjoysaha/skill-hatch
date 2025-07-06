@@ -53,12 +53,20 @@ const Users = sequelize.define('Users', {
     status: {
         type: DataTypes.ENUM('active', 'inactive'),
         allowNull: false,
-        defaultValue: 'active',
+        defaultValue: 'inactive',
     },
     last_active_at: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
+    },
+    profile_image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    file_name: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 }, {
     timestamps: true,

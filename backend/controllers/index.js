@@ -5,6 +5,9 @@ import {
     getAllUsers,
     getUsersByAccountType,
     updateLastActive,
+    getUserById,
+    updateUserById,
+    deleteUserById,
 } from './userController.js'
 
 
@@ -15,4 +18,7 @@ export {
     getAllUsers,
     getUsersByAccountType,
     updateLastActive,
+    getUserById,
+    updateUserById,
+    deleteUserById,
 }
