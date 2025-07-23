@@ -6,8 +6,10 @@ export default function Layout() {
     <>
       <Navbar />
       <Animate>
-        <main className="flex-1 bg-gray-100 pt-4 sm:pt-6 lg:pt-8">
-          <Outlet />
+        <main className="flex-1 bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="w-full max-w-7xl">
+            <Outlet />
+          </div>
         </main>
       </Animate>
       <Footer />

@@ -9,6 +9,7 @@ import Loader from './Loader'
 import ProtectedRoute from './ProtectedRoute'
 import Layout from './Layout'
 import Chats from './Chats'
+import RoadmapGenerator from './RoadmapGenerator'
 
 export {
     Navbar,
@@ -22,4 +23,5 @@ export {
     ProtectedRoute,
     Layout,
     Chats,
+    RoadmapGenerator,
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { Loader } from './index'
+import { NavLink } from "react-router-dom"
 
-export default function Home({ socket }) {
+export default function Home() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,14 +22,14 @@ export default function Home({ socket }) {
   if (loading) return <Loader />
 
   return (
-    <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+    <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white h-[100vh]">
       <h2 className="text-4xl font-extrabold text-gray-900 mb-10 text-center animate-fadeIn tracking-tight">
         Welcome to Your Learning Hub
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Roadmaps */}
-        <div className="bg-white p-8 rounded-2xl shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+        <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <i className="fas fa-road text-yellow-500 text-2xl"></i> Your Roadmaps
           </h3>
@@ -48,13 +49,13 @@ export default function Home({ socket }) {
             ))}
           </div>
 
-          <button className="w-full mt-8 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all transform hover:-translate-y-1 text-sm shadow-md">
+          <NavLink to={"/user/roadmapGenerator"} className="block text-center w-full mt-8 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all transform hover:-translate-y-1 text-sm shadow-md">
             Generate New Roadmap
-          </button>
-        </div>
+          </NavLink>
 
+        </div>
         {/* Progress Tracker */}
-        <div className="bg-white p-8 rounded-2xl shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+        <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <i className="fas fa-trophy text-yellow-500 text-2xl"></i> Progress Tracker
           </h3>
@@ -68,7 +69,7 @@ export default function Home({ socket }) {
             ].map((badge, i) => (
               <span
                 key={i}
-                className="flex items-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-4 py-2 rounded-full text-xs font-semibold animate-grow shadow-sm"
+                className="flex items-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-4 py-2 rounded-full text-xs font-semibold animate-grow shadow-sm transition-all transform hover:-translate-y-1"
               >
                 <i className={`fas ${badge.icon} mr-2 text-sm`}></i>
                 {badge.label}
@@ -78,7 +79,7 @@ export default function Home({ socket }) {
         </div>
 
         {/* Community Highlights */}
-        <div className="bg-white p-8 rounded-2xl shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+        <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <i className="fas fa-users text-yellow-500 text-2xl"></i> Community Highlights
           </h3>

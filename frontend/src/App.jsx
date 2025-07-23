@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { io } from 'socket.io-client'
 import { AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Chats, Home, Login, Profile, ProtectedRoute, Registration, Layout } from './components/index'
+import { Chats, Home, Login, Profile, ProtectedRoute, Registration, Layout, RoadmapGenerator } from './components/index'
 
 function App() {
   const userId = localStorage.getItem("userId")
@@ -40,16 +40,10 @@ function App() {
           <Route path="/" element={<Registration />} />
           <Route path="/user/login" element={<Login />} />
 
-          <Route
-            path="/user"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="home" element={<Home socket={socket} />} />
+          <Route path="/user" element={ <ProtectedRoute><Layout /></ProtectedRoute> }>
+            <Route path="home" element={<Home />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="roadmapGenerator" element={<RoadmapGenerator />} />
             <Route path="chats" element={<Chats socket={socket} />} />
           </Route>
 
