@@ -24,7 +24,7 @@ function configSocketIO(httpServer) {
             }
 
             userSocketMap[userId] = socket.id
-            console.log(`✅ User ${userId} joined with socket ${socket.id}`)
+            console.log(`\n✅ User ${userId} joined with socket ID: ${socket.id}\n`)
         })
 
         socket.on('send_message', ({ from, to, text, timestamp }) => {

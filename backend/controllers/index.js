@@ -10,7 +10,6 @@ import {
     deleteUserById,
 } from './userController.js'
 
-
 export {
     createUser,
     loginUser,
