@@ -11,31 +11,34 @@ async function getQuestionAnswer(question) {
       {
         role: "system",
         content: `You are a professional learning coach. Based on a user's learning goal, experience level, and timeframe, generate a complete and actionable learning roadmap in valid JSON format only.
-        
-        Strictly follow this format:
+        Strictly follow this format (all keys are required):
         {
-            "title": "string (roadmap title)",
-            "duration_weeks": number,
-            "tasks": [{
-                "week": number,
-                "task": "string (what the user should do)",
-                "xp": number (estimated XP for this task),
-                "resources": ["string (high-quality link like YouTube video, documentation, or blog article)"]
-            }]
+          "title": "string (roadmap title)",
+          "description": "string (roadmap description)",
+          "duration_weeks": number,
+          "tasks": [{
+            "week": number,
+            "task": "string (what the user should do)",
+            "xp": number (estimated XP for this task),
+            "resources": ["string (high-quality latest popular link like YouTube video, documentation, or blog article)"]
+          }],
+          "status": "Pending", // Always set to "Pending"
+          "badge": {
+            "title": "string (badge title same as roadmap title)",
+            "icon": "string (FontAwesome class, e.g., fa-code, fa-database)",
+          }
         }
 
         Instructions:
-        - Only return the JSON, without any explanation, markdown, or backticks.
-        - Each task must be practical and progressive.
-        - Include a mix of official documentation, YouTube tutorials, and trusted blog posts (like MDN, freeCodeCamp, or CSS-Tricks).
-        - Match the difficulty with the experience level (Beginner = basics, Advanced = deep dives).
-        - Prioritize trusted sources like:
-        - MDN Web Docs
-        - official docs (e.g., react.dev, nodejs.org)
-        - YouTube (Fireship, Net Ninja, Traversy Media, etc.)
-        - Blogs (freecodecamp.org, css-tricks.com)
-
-        Make sure the JSON is valid and parseable without any formatting characters or errors.`
+        - Only return the raw JSON object — no markdown, no backticks, no explanations.
+        - Ensure the JSON is valid and parseable by JSON.parse() in JavaScript.
+        - Each task should be practical, progressively structured, and aligned with the user's experience.
+        - Use only trusted sources such as:
+          - MDN Web Docs
+          - Official documentation (e.g., react.dev, nodejs.org)
+          - YouTube (Fireship, Net Ninja, Traversy Media, Bro Code, FreeCodeCamp, Chai Aur Code, Code With Harry)
+          - Blogs (freecodecamp.org, css-tricks.com)
+        - Choose a relevant badge icon from FontAwesome based on the skill (e.g., fa-code for coding, fa-database for DBs, fa-paint-brush for design).`
       }, {
         role: "user",
         content: question,

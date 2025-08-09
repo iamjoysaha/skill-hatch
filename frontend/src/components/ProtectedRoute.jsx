@@ -5,47 +5,52 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 
 export default function ProtectedRoute({ children }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [authStatus, setAuthStatus] = useState({
+    isLoading: true,
+    isAuthenticated: false,
+    error: ''
+  })
 
   useEffect(() => {
-    const verifyAuth = async () => {
+    const verifyUser = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify/verify-token`, {
-          withCredentials: true
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/verify/verify-token`,
+          { withCredentials: true }
+        )
 
-        if (res.data.success) {
-          setIsAuthenticated(true)
+        if (response.data.success) {
+          setAuthStatus({ isLoading: false, isAuthenticated: true, error: '' })
         } else {
-          setErrorMessage(res.data.message || 'Authentication failed.')
-          setIsAuthenticated(false)
+          setAuthStatus({
+            isLoading: false,
+            isAuthenticated: false,
+            error: response.data.message || 'Authentication failed.'
+          })
         }
-      } 
-      catch (err) {
-        const message = err.response?.data?.message || 'You must log in to access this page.'
-        setErrorMessage(message)
-        setIsAuthenticated(false)
-      } finally {
-        setTimeout(() => setIsLoading(false), 300)
+      } catch (err) {
+        setAuthStatus({
+          isLoading: false,
+          isAuthenticated: false,
+          error: err.response?.data?.message || 'You must log in to access this page.'
+        })
       }
     }
 
-    verifyAuth()
+    verifyUser()
   }, [])
 
   useEffect(() => {
-    if (!isLoading && errorMessage) {
-      toast.error(errorMessage)
+    if (!authStatus.isLoading && authStatus.error) {
+      toast.error(authStatus.error)
     }
-  }, [isLoading, errorMessage])
+  }, [authStatus])
 
-  if (isLoading) {
+  if (authStatus.isLoading) {
     return <Loader />
   }
 
-  if (!isAuthenticated) {
+  if (!authStatus.isAuthenticated) {
     return <Navigate to="/user/login" replace />
   }
 

@@ -10,6 +10,12 @@ import ProtectedRoute from './ProtectedRoute'
 import Layout from './Layout'
 import Chats from './Chats'
 import RoadmapGenerator from './RoadmapGenerator'
+import Roadmaps from './Roadmaps'
+import Mentors from './Mentors'
+import News from './News'
+
+// ADMIN COMPONENTS
+import Dashboard from './admin/Dashboard'
 
 export {
     Navbar,
@@ -24,4 +30,8 @@ export {
     Layout,
     Chats,
     RoadmapGenerator,
+    Roadmaps,
+    Mentors,
+    News,
+    Dashboard,
 }

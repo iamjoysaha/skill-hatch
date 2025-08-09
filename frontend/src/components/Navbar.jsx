@@ -54,21 +54,21 @@ export default function Navbar() {
   }, [location.pathname])
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
           <Link to="/user/home" className="flex items-center gap-2">
-            <span className="text-2xl font-extrabold text-gray-900 tracking-tight">SkillHatch</span>
+            <span className="text-2xl font-extrabold text-white tracking-tight">SkillHatch</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink to="/user/home" label="Home" current={location.pathname === '/user/home'} />
-            <NavLink to="#" label="Roadmaps" />
-            <NavLink to="#" label="Mentors" />
-            <NavLink to="/user/chats" label="Chat" />
-            <NavLink to="#" label="Progress" />
+            <NavLink to="/user/roadmaps" label="Roadmaps" />
+            <NavLink to="/user/mentors" label="Mentors" />
+            <NavLink to="/user/chats" label="Chats" />
+            <NavLink to="/user/news" label="News & Announcements" />
           </div>
 
           {/* Profile Icon & Logout */}
@@ -104,13 +104,13 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden px-4 pt-3 pb-4 bg-gray-50 border-t border-gray-200">
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-gray-50 border-t border-gray-200 shadow-lg z-50 px-4 pt-3 pb-4">
           <div className="space-y-2">
             <NavLink to="/user/home" label="Home" mobile current={location.pathname === '/user/home'} />
-            <NavLink to="#" label="Roadmaps" mobile />
-            <NavLink to="#" label="Mentors" mobile />
-            <NavLink to="/user/chats" label="Chat" mobile />
-            <NavLink to="#" label="Progress" mobile />
+            <NavLink to="/user/roadmaps" label="Roadmaps" mobile />
+            <NavLink to="/user/mentors" label="Mentors" mobile />
+            <NavLink to="/user/chats" label="Chats" mobile />
+            <NavLink to="/user/news" label="News & Announcements" mobile />
             <button
               onClick={handleLogout}
               className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"

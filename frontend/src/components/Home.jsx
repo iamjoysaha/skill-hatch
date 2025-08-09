@@ -3,11 +3,10 @@ import { Loader } from './index'
 import { NavLink } from "react-router-dom"
 
 export default function Home() {
-  const [loading, setLoading] = useState(true)
+  const [roadmapData, setRoadmapData] = useState(null)
 
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem("reloaded")
-
     if (!hasReloaded) {
       sessionStorage.setItem("reloaded", "true")
       window.location.reload()
@@ -15,14 +14,23 @@ export default function Home() {
       sessionStorage.removeItem("reloaded")
     }
 
-    const timer = setTimeout(() => setLoading(false), 500)
-    return () => clearTimeout(timer)
+    // Get roadmap data from localStorage
+    const storedData = localStorage.getItem("roadmapData")
+    if (storedData) {
+      try {
+        setRoadmapData(JSON.parse(storedData))
+      } catch (err) {
+        console.error("Error parsing roadmapData:", err)
+      }
+    }
   }, [])
 
-  if (loading) return <Loader />
+  const progress = roadmapData?.totalXP
+    ? Math.min(100, Math.floor((roadmapData.earnedXP / roadmapData.totalXP) * 100))
+    : 0
 
   return (
-    <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white h-[100vh]">
+    <div className="container px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
       <h2 className="text-4xl font-extrabold text-gray-900 mb-10 text-center animate-fadeIn tracking-tight">
         Welcome to Your Learning Hub
       </h2>
@@ -34,47 +42,54 @@ export default function Home() {
             <i className="fas fa-road text-yellow-500 text-2xl"></i> Your Roadmaps
           </h3>
 
-          <div className="space-y-6">
-            {["Frontend Development", "UI/UX Design"].map((title, i) => (
-              <div key={i}>
-                <div className="text-sm font-semibold text-gray-700">{title}</div>
-                <div className="w-full h-3 bg-gray-200 rounded-full mt-2 overflow-hidden">
-                  <div
-                    className="h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full transition-all duration-500"
-                    style={{ width: `0%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2 font-medium">Progress: 0%</p>
+          {roadmapData ? (
+            <div>
+              <div className={`text-sm font-semibold ${progress === 100 ? "text-gray-400 line-through" : "text-gray-700"}`}>{roadmapData.title}</div>
+              <div className="w-full h-3 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                <div
+                  className="h-3 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full transition-all duration-500"
+                  style={{ width: `${progress}%` }}
+                ></div>
               </div>
-            ))}
-          </div>
+              <p className="text-xs text-gray-500 mt-2 font-medium">Progress: {progress}%</p>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">No roadmap found. Generate one below.</p>
+          )}
 
-          <NavLink to={"/user/roadmapGenerator"} className="block text-center w-full mt-8 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all transform hover:-translate-y-1 text-sm shadow-md">
+          <NavLink
+            to={"/user/roadmapGenerator"}
+            className="block text-center w-full mt-8 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all transform hover:-translate-y-1 text-sm shadow-md"
+          >
             Generate New Roadmap
           </NavLink>
-
         </div>
+
         {/* Progress Tracker */}
         <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <i className="fas fa-trophy text-yellow-500 text-2xl"></i> Progress Tracker
           </h3>
-          <p className="text-sm text-gray-600 font-medium mb-2">XP: 450 / 1000</p>
-          <p className="text-sm text-gray-600 font-medium mb-6">Badges: 2</p>
+
+          <p className="text-sm text-gray-600 font-medium mb-2">
+            XP: {roadmapData?.earnedXP || 0} / {roadmapData?.totalXP || 0}
+          </p>
+
+          <p className="text-sm text-gray-600 font-medium mb-6">
+            Badges: {roadmapData?.badge ? 1 : 0}
+          </p>
 
           <div className="flex flex-wrap gap-3">
-            {[
-              { icon: "fa-code", label: "HTML Master" },
-              { icon: "fa-paint-brush", label: "CSS Pro" }
-            ].map((badge, i) => (
+            {roadmapData?.badge && (
               <span
-                key={i}
                 className="flex items-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-4 py-2 rounded-full text-xs font-semibold animate-grow shadow-sm transition-all transform hover:-translate-y-1"
               >
-                <i className={`fas ${badge.icon} mr-2 text-sm`}></i>
-                {badge.label}
+                <i className={`fas ${roadmapData.badge.icon} mr-2 text-sm`}></i>
+                {roadmapData.badge.title}
               </span>
-            ))}
+            ) || (
+              <span className="text-sm text-gray-500">No badges earned yet!</span>
+            )}
           </div>
         </div>
 
@@ -84,18 +99,7 @@ export default function Home() {
             <i className="fas fa-users text-yellow-500 text-2xl"></i> Community Highlights
           </h3>
 
-          {[
-            {
-              title: "React Meetup",
-              date: "Next Week",
-              desc: "Join our local React developers meetup!"
-            },
-            {
-              title: "UI/UX Workshop",
-              date: "This Friday",
-              desc: "Learn advanced Figma techniques."
-            }
-          ].map((event, i) => (
+          {[{ title: "React Meetup", date: "Next Week", desc: "Join our local React developers meetup!" }, { title: "UI/UX Workshop", date: "This Friday", desc: "Learn advanced Figma techniques." }].map((event, i) => (
             <div
               key={i}
               className="mb-6 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all border border-gray-200"

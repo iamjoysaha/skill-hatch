@@ -3,16 +3,16 @@ import { Animate, Footer, Navbar } from "./index"
 
 export default function Layout() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <Animate>
-        <main className="flex-1 bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
+        <main className="flex-1 flex justify-center h-full">
           <div className="w-full max-w-7xl">
             <Outlet />
           </div>
         </main>
       </Animate>
       <Footer />
-    </>
+    </div>
   )
 }

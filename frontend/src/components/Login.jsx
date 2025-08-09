@@ -28,10 +28,14 @@ export default function Login() {
       
       if (data.success) {
         localStorage.setItem('userId', data.user.id)
-        console.log(data)
-
         toast.success(data.message)
-        navigate('/user/home')
+
+        if(data.user.account_type === 'student') {
+          navigate('/user/home')
+        }
+        else if(data.user.account_type === 'mentor') {
+          navigate('/admin/dashboard')
+        }
       }
     } 
     catch (error) {
