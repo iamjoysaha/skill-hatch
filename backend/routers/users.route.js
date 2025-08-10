@@ -70,6 +70,14 @@ router.get('/mentors', async (req, res) => {
   return res.json({ success, mentors: users })
 })
 
+router.get('/students', async (req, res) => {
+  const { success, message, users } = await getUsersByAccountType('student')
+  if (!success)
+    return res.status(404).json({ success, message })
+  
+  return res.json({ success, mentors: users })
+})
+
 router.post('/update-last-active', async (req, res) => {
   const { user_id } = req.body
   const { success, message, user } = await updateLastActive(user_id)

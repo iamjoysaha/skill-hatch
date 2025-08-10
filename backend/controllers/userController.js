@@ -78,8 +78,7 @@ async function getAllUsers() {
 
 async function getUsersByAccountType(account_type) {
     try {
-        // const users = await Users.findAll({ where: { account_type }})
-        const users = await Users.findAll() // for testing
+        const users = await Users.findAll({ where: { account_type }})
         if (!users.length)
             return { success: false, message: 'Users not found!' }
 

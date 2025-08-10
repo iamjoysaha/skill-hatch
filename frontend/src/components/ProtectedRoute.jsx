@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react'
 import Loader from './Loader'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { Unauthorized } from './index'
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute({ children, role }) {
+  const accountType = localStorage.getItem("accountType")
   const [authStatus, setAuthStatus] = useState({
     isLoading: true,
     isAuthenticated: false,
@@ -12,28 +14,23 @@ export default function ProtectedRoute({ children }) {
   })
 
   useEffect(() => {
+    console.log("Account Type:", accountType)
+  }, [accountType])
+
+  useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/verify/verify-token`,
-          { withCredentials: true }
-        )
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify/verify-token`, { withCredentials: true })
 
-        if (response.data.success) {
+        if (response.data.success && accountType === role) {
           setAuthStatus({ isLoading: false, isAuthenticated: true, error: '' })
-        } else {
-          setAuthStatus({
-            isLoading: false,
-            isAuthenticated: false,
-            error: response.data.message || 'Authentication failed.'
-          })
+        } 
+        else {
+          setAuthStatus({ isLoading: false, isAuthenticated: false, error: response.data.message || 'Authentication failed.'})
         }
-      } catch (err) {
-        setAuthStatus({
-          isLoading: false,
-          isAuthenticated: false,
-          error: err.response?.data?.message || 'You must log in to access this page.'
-        })
+      } 
+      catch (error) {
+        setAuthStatus({ isLoading: false, isAuthenticated: false, error: error.response?.data?.message || 'You must log in to access this page.'})
       }
     }
 
@@ -50,8 +47,8 @@ export default function ProtectedRoute({ children }) {
     return <Loader />
   }
 
-  if (!authStatus.isAuthenticated) {
-    return <Navigate to="/user/login" replace />
+  if (!authStatus.isAuthenticated && accountType !== role) {
+    return <Unauthorized/>
   }
 
   return children

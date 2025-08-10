@@ -1,4 +1,4 @@
-export default function FullScreenLoader() {
+export default function Loader() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-90">
       <div className="flex flex-col items-center space-y-4">

@@ -75,7 +75,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <button
               onClick={handleLogout}
-              className="hidden md:block text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors duration-200"
+              className="hidden md:block text-sm font-medium text-white hover:text-yellow-400 transition-colors duration-200"
             >
               Logout
             </button>
@@ -83,14 +83,14 @@ export default function Navbar() {
               <img
                 src={user?.profile_image || DEFAULT_PROFILE_IMAGE}
                 alt="Profile"
-                className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-blue-500 transition-colors duration-200"
+                className="w-10 h-10 rounded-full object-cover border-2 hover:text-yellow-400 transition-colors duration-200"
               />
             </Link>
             {/* Mobile Toggle */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-700 hover:text-blue-600 focus:outline-none transition-colors duration-200"
+                className="text-white hover:text-yellow-400 focus:outline-none transition-colors duration-200"
                 aria-label="Toggle mobile menu"
               >
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@ export default function Navbar() {
             <NavLink to="/user/news" label="News & Announcements" mobile />
             <button
               onClick={handleLogout}
-              className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+              className="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-white hover:text-yellow-400 hover:bg-blue-50 transition-colors duration-200"
             >
               Logout
             </button>
@@ -130,8 +130,8 @@ function NavLink({ to, label, mobile, current }) {
     : 'text-sm font-medium'
 
   const active = current
-    ? 'text-blue-600 bg-blue-50 md:bg-transparent md:border-b-2 md:border-blue-600'
-    : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50 md:hover:bg-transparent transition-colors duration-200'
+    ? 'text-yellow-400 bg-yellow-50 md:bg-transparent md:border-b-2 md:border-yellow-400'
+    : 'text-white hover:text-yellow-400 hover:bg-yellow-50 md:hover:bg-transparent transition-colors duration-200'
 
   return (
     <Link to={to} className={`${base} ${active}`}>

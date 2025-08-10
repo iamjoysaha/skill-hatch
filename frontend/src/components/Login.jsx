@@ -31,9 +31,11 @@ export default function Login() {
         toast.success(data.message)
 
         if(data.user.account_type === 'student') {
+          localStorage.setItem('accountType', data.user.account_type)
           navigate('/user/home')
         }
         else if(data.user.account_type === 'mentor') {
+          localStorage.setItem('accountType', data.user.account_type)
           navigate('/admin/dashboard')
         }
       }

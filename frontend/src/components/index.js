@@ -8,14 +8,13 @@ import Animate from './Animate'
 import Loader from './Loader'
 import ProtectedRoute from './ProtectedRoute'
 import Layout from './Layout'
-import Chats from './Chats'
 import RoadmapGenerator from './RoadmapGenerator'
 import Roadmaps from './Roadmaps'
 import Mentors from './Mentors'
 import News from './News'
-
-// ADMIN COMPONENTS
+import Unauthorized from './Unauthorized'
 import Dashboard from './admin/Dashboard'
+import UnifiedChats from './UnifiedChats'
 
 export {
     Navbar,
@@ -28,10 +27,11 @@ export {
     Loader,
     ProtectedRoute,
     Layout,
-    Chats,
     RoadmapGenerator,
     Roadmaps,
     Mentors,
     News,
     Dashboard,
+    Unauthorized,
+    UnifiedChats,
 }

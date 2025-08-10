@@ -273,7 +273,7 @@ export default function Profile() {
                 <hr className="my-6 border-gray-300" />
                 <h4 className="text-lg font-semibold text-gray-800">Change Password</h4>
 
-                {["currentPassword", "newPassword", "confirmNewPassword"].map((field, idx) => (
+                {["currentPassword", "newPassword", "confirmNewPassword"].map((field) => (
                   <div className="relative" key={field}>
                     <input
                       type={showPassword[field === "currentPassword" ? "current" : field === "newPassword" ? "new" : "confirm"] ? "text" : "password"}
@@ -315,7 +315,7 @@ export default function Profile() {
                 <p className="text-sm text-gray-700 mb-4">Total XP: {userMeta.totalXP}</p>
                 <button 
                   onClick={() => setEditMode(true)} 
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition-colors shadow-md"
+                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-md transition-colors shadow-md"
                 >
                   Edit Profile
                 </button>
