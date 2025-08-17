@@ -1,7 +1,8 @@
 import { sequelize } from '../config/database.js'
 import { DataTypes } from 'sequelize'
+import User from './User.js'
 
-const Activities = sequelize.define('Activities', {
+const Activity = sequelize.define('activity_model', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -16,20 +17,17 @@ const Activities = sequelize.define('Activities', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users',
+      model: User,
       key: 'id',
     },
     onDelete: 'CASCADE',
   },
 }, {
   timestamps: true,
-  tableName: 'activities',
+  tableName: 'activity',
   indexes: [
-    {
-      name: 'user_id_index',
-      fields: ['user_id'],
-    }
+    { name: 'user_id_index', fields: ['user_id'] }
   ]
 })
 
-export default Activities
+export default Activity

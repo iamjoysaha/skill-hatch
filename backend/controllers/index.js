@@ -10,6 +10,12 @@ import {
     deleteUserById,
 } from './userController.js'
 
+import { 
+    createRoadmap,
+    getRoadmapsByUserId,
+    deleteRoadmapById,
+} from './roadmapController.js'
+
 export {
     createUser,
     loginUser,
@@ -20,4 +26,7 @@ export {
     getUserById,
     updateUserById,
     deleteUserById,
+    createRoadmap,
+    getRoadmapsByUserId,
+    deleteRoadmapById,
 }

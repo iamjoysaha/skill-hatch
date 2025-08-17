@@ -1,7 +1,8 @@
 import { sequelize } from '../config/database.js'
 import { DataTypes } from 'sequelize'
+import User from './User.js'
 
-const BankInfo = sequelize.define('BankInfo', {
+const BankInformation = sequelize.define('bank_information_model', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -17,24 +18,22 @@ const BankInfo = sequelize.define('BankInfo', {
     allowNull: false,
     defaultValue: false,
   },
-  mentor_id: {
+  // foreign keys
+  user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users',
+      model: User,
       key: 'id'
     },
     onDelete: 'CASCADE',
   }
 }, {
   timestamps: true,
-  tableName: 'bank_info',
+  tableName: 'bank_information',
   indexes: [
-    {
-      name: 'mentor_id_index',
-      fields: ['mentor_id']
-    }
+    { name: 'user_id_index', fields: ['user_id']}
   ]
 })
 
-export default BankInfo
+export default BankInformation

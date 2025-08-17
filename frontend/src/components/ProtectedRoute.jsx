@@ -47,7 +47,11 @@ export default function ProtectedRoute({ children, role }) {
     return <Loader />
   }
 
-  if (!authStatus.isAuthenticated && accountType !== role) {
+  if( !authStatus.isAuthenticated) {
+    return <Navigate to="/user/login" replace />
+  }
+
+  if (accountType !== role) {
     return <Unauthorized/>
   }
 

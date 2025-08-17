@@ -11,14 +11,14 @@ import {
   updateLastActive,
   updateUserById,
 } from '../controllers/index.js'
-import Users from '../models/Users.js'
+import { User } from '../models/index.js'
 import { upload, updateCloudinaryImage, deleteCloudinaryImage } from '../services/cloudinary.js'
 
 const router = express.Router()
 dotenv.config()
 
 router.post('/create', async (req, res) => {
-    const { first_name, last_name, college_name, roll_no, email, username, password, confirm_password, account_type, expertise } = req.body
+    const { first_name, last_name, college_name, roll_no, email, username, password, account_type, expertise } = req.body
 
     const { success, message, user } = await createUser({ first_name, last_name, college_name, roll_no, email, username, password, account_type, expertise })
 
@@ -51,7 +51,7 @@ router.post('/logout', async (req, res) => {
     if (!userId) 
       return res.status(401).json({ success: false, message: "Unauthorized" })
 
-    await Users.update({ status: 'inactive', last_active_at: new Date() }, { where: { id: userId } })
+    await User.update({ logged_out_at: new Date(), status: 'inactive', last_active_at: new Date() }, { where: { id: userId } })
 
     res.clearCookie('token')
     res.status(200).json({ success: true, message: 'Logged out successfully!' })
@@ -96,7 +96,7 @@ router.put('/update', async (req, res) => {
   const { user_id, email, username, first_name, last_name, password, currentPassword } = req.body
 
   try {
-    const user = await Users.findByPk(user_id)
+    const user = await User.findByPk(user_id)
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' })
     }

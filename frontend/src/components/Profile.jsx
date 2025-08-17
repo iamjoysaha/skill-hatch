@@ -34,9 +34,8 @@ export default function Profile() {
 
   const [userMeta, setUserMeta] = useState({
     joined: "",
-    currentLevel: "Beginner",
-    totalXP: 0,
-    learningGoals: [],
+    level: "Beginner",
+    total_badges: 0,
     badges: [],
   });
 
@@ -52,6 +51,7 @@ export default function Profile() {
 
         if (data.success) {
           const user = data.user;
+          console.log("User data fetched successfully:", user);
 
           const initial = {
             userid: user.username || "",
@@ -68,14 +68,13 @@ export default function Profile() {
 
           setUserMeta({
             joined: new Date(user.createdAt).toLocaleDateString(),
-            currentLevel: "Beginner",
-            totalXP: user.total_xp || 0,
-            learningGoals: user.learning_goals || [],
+            level: user?.badge_count > 10 ? "Intermediate" : user?.badge_count > 20 ? "Advanced" : "Beginner",
+            total_badges: user.badge_count || 0,
             badges: user.badges || [],
           });
         }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
         toast.error("Failed to load profile data.");
       }
     };
@@ -231,10 +230,10 @@ export default function Profile() {
                 <input 
                   type="file" 
                   accept="image/*" 
-                  onChange={handleImageChange} 
-                  className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-800 hover:file:bg-blue-200 transition-colors" 
+                  onChange={handleImageChange}
+                  className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:text-gray-800 file:bg-yellow-400 hover:file:bg-yellow-500 transition-colors file:cursor-pointer" 
                 />
-                <input 
+                <input
                   name="first_name" 
                   value={formData.first_name} 
                   onChange={handleChange} 
@@ -296,11 +295,11 @@ export default function Profile() {
                 <div className="flex gap-4 mt-6">
                   <button 
                     onClick={handleSubmit} 
-                    className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition-colors shadow-md"
+                    className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-md transition-colors shadow-md"
                   >
                     Save
                   </button>
-                  <button 
+                  <button
                     onClick={cancelEdit} 
                     className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-md transition-colors shadow-md"
                   >
@@ -311,11 +310,11 @@ export default function Profile() {
             ) : (
               <>
                 <p className="text-sm text-gray-700 mb-2">Joined: {userMeta.joined}</p>
-                <p className="text-sm text-gray-700 mb-2">Current Level: {userMeta.currentLevel}</p>
-                <p className="text-sm text-gray-700 mb-4">Total XP: {userMeta.totalXP}</p>
+                <p className="text-sm text-gray-700 mb-2">Your Level: {userMeta.level}</p>
+                <p className="text-sm text-gray-700 mb-4">Total Badges: {userMeta.total_badges}</p>
                 <button 
                   onClick={() => setEditMode(true)} 
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-md transition-colors shadow-md"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-md transition-colors shadow-md"
                 >
                   Edit Profile
                 </button>
@@ -324,30 +323,20 @@ export default function Profile() {
           </div>
 
           <div className="p-6 bg-white rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Learning Goals</h3>
-            <div className="flex flex-wrap gap-2">
-              {userMeta.learningGoals.map((goal, idx) => (
-                <span 
-                  key={idx} 
-                  className="bg-gray-100 text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-gray-200"
-                >
-                  {goal}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-6 bg-white rounded-xl shadow-md">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Achievements</h3>
             <div className="flex flex-wrap gap-2">
-              {userMeta.badges.map((badge, idx) => (
-                <span 
-                  key={idx} 
-                  className="bg-gray-100 text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium transition-colors hover:bg-gray-200"
-                >
-                  {badge}
-                </span>
-              ))}
+              {userMeta?.badges && userMeta.badges?.length > 0 ? (
+                userMeta.badges.map((badge, idx) => (
+                  <span 
+                    key={idx} 
+                    className="bg-yellow-400 text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer"
+                  >
+                    {badge}
+                  </span>
+                ))
+              ) : (
+                <span className="text-gray-500">No badges earned yet</span>
+              )}
             </div>
           </div>
         </div>

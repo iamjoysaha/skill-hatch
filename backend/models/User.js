@@ -1,7 +1,7 @@
 import { sequelize } from '../config/database.js'
 import { DataTypes, NOW } from 'sequelize'
 
-const Users = sequelize.define('Users', {
+const User = sequelize.define('user_model', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -68,9 +68,38 @@ const Users = sequelize.define('Users', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    logged_in_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    logged_out_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    badge_count: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    badges: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
+    },
+    level: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        defaultValue: 'beginner',
+    },
+    rating: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
 }, {
     timestamps: true,
-    tableName: 'users',
+    tableName: 'user',
     indexes: [
         { name: 'username_index', fields: ['username'], unique: true },
         { name: 'email_index', fields: ['email'], unique: true },
@@ -80,4 +109,4 @@ const Users = sequelize.define('Users', {
     ]
 })
 
-export default Users
+export default User

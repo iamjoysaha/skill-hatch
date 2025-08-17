@@ -1,13 +1,21 @@
 import dotenv from 'dotenv'
 import { sequelize } from '../config/database.js'
-import { Users, Activities } from '../models/index.js'
+import { 
+    User, 
+    Activity,
+    BankInformation,
+    Chat,
+    Community,
+    Connection,
+    Contribution,
+    Feedback,
+    Roadmap,
+} from '../models/index.js'
 
 dotenv.config()
 
 // create pre-existing data here!
-const seedData = async () => {
-  
-}
+const seedData = async () => {}
 
 async function initializeDB() {
     try {

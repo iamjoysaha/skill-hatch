@@ -1,36 +1,24 @@
 import { sequelize } from '../config/database.js'
 import { DataTypes } from 'sequelize'
+import Connection from './Connection.js'
+import User from './User.js'
 
-const Chats = sequelize.define('Chats', {
+const Feedback = sequelize.define('feedback_model', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  message: {
+  comment: {
     type: DataTypes.TEXT('long'),
     allowNull: false,
   },
-  is_read: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-  },
   // foreign keys
-  sender_id: {
+  user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users',
-      key: 'id',
-    },
-    onDelete: 'CASCADE',
-  },
-  receiver_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'users',
+      model: User,
       key: 'id',
     },
     onDelete: 'CASCADE',
@@ -39,19 +27,18 @@ const Chats = sequelize.define('Chats', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'connections',
+      model: Connection,
       key: 'id',
     },
     onDelete: 'CASCADE',
-  },
+  }
 }, {
   timestamps: true,
-  tableName: 'chats',
+  tableName: 'feedback',
   indexes: [
-    { name: 'sender_id_index', fields: ['sender_id'] },
-    { name: 'receiver_id_index', fields: ['receiver_id'] },
+    { name: 'user_id_index', fields: ['user_id'] },
     { name: 'connection_id_index', fields: ['connection_id'] },
   ]
 })
 
-export default Chats
+export default Feedback

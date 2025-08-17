@@ -20,11 +20,12 @@ async function getQuestionAnswer(question) {
             "week": number,
             "task": "string (what the user should do)",
             "xp": number (estimated XP for this task),
-            "resources": ["string (high-quality latest popular link like YouTube video, documentation, or blog article)"]
+            "status": string ("Pending" | "Completed") default to "Pending",
+            "resources": ["string (high-quality latest popular links of YouTube videos from freecodecamp or documentation or articles)"]
           }],
-          "status": "Pending", // Always set to "Pending"
+          "status": string ("Pending" | "Completed") default to "Pending",
           "badge": {
-            "title": "string (badge title same as roadmap title)",
+            "title": "string (badge title related to roadmap title)",
             "icon": "string (FontAwesome class, e.g., fa-code, fa-database)",
           }
         }

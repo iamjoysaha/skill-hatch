@@ -1,16 +1,16 @@
 import { Op } from 'sequelize'
 import bcrypt from 'bcrypt'
-import { Users } from '../models/index.js'
+import { User } from '../models/index.js'
 
 async function createUser({ first_name, last_name, college_name, roll_no, email, username, password, account_type, expertise }) {
     try {
-        let user = await Users.findOne({ where: { [Op.or]: [ { email }, { username } ] } })
+        let user = await User.findOne({ where: { [Op.or]: [ { email }, { username } ] } })
         if(user)
             return { success: false, message: 'User already exists!' }
         
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        user = await Users.create({ first_name, last_name, college_name, roll_no, username, email, password: hashedPassword, account_type, expertise })
+        user = await User.create({ first_name, last_name, college_name, roll_no, username, email, password: hashedPassword, account_type, expertise })
         return user ? 
             { success: true, message: 'Registration successful!', user } : 
             { success: false, message: 'Registration failed!'}
@@ -24,7 +24,7 @@ async function createUser({ first_name, last_name, college_name, roll_no, email,
 
 async function loginUser({ email, password }) {
     try {
-        const user = await Users.findOne({ where: { email } })
+        const user = await User.findOne({ where: { email } })
         if (!user) 
             return { success: false, message: 'User not found!' }
 
@@ -32,7 +32,7 @@ async function loginUser({ email, password }) {
         if (!isMatch) 
             return { success: false, message: 'Invalid password!' }
 
-        await user.update({ last_active_at: new Date(), status: 'active' })
+        await user.update({ logged_in_at: new Date(), last_active_at: new Date(), status: 'active' })
         return { success: true, message: 'Login successful!', user }
     } 
     catch (error) {
@@ -48,7 +48,7 @@ async function getUserByEmail({ email }) {
     }
 
     try {
-        const user = await Users.findOne({ where: { email } })
+        const user = await User.findOne({ where: { email } })
         if (!user)
         return { success: false, message: 'User not found for this email' }
 
@@ -63,7 +63,7 @@ async function getUserByEmail({ email }) {
 
 async function getAllUsers() {
     try {
-        const users = await Users.findAll()
+        const users = await User.findAll()
         if (!users.length)
             return { success: false, message: 'Users not found!' }
 
@@ -78,7 +78,7 @@ async function getAllUsers() {
 
 async function getUsersByAccountType(account_type) {
     try {
-        const users = await Users.findAll({ where: { account_type }})
+        const users = await User.findAll({ where: { account_type }})
         if (!users.length)
             return { success: false, message: 'Users not found!' }
 
@@ -96,12 +96,12 @@ async function updateLastActive(user_id) {
         return { success: false, message: 'User ID is required' }
 
     try {
-        const user = await Users.findByPk(user_id)
+        const user = await User.findByPk(user_id)
         if (!user)
             return { success: false, message: 'User not found' }
 
         const now = new Date()
-        await user.update({ last_active_at: now, status: 'active' })
+        await user.update({ logged_in_at: now, last_active_at: now, status: 'active' })
         return { success: true, message: 'User activity updated!', user }
     } 
     catch (error) {
@@ -113,7 +113,7 @@ async function updateLastActive(user_id) {
 
 async function getUserById(user_id) {
     try {
-        const user = await Users.findByPk(user_id)
+        const user = await User.findByPk(user_id)
         if (!user)
             return { success: false, message: 'User not found!' }
 
@@ -128,7 +128,7 @@ async function getUserById(user_id) {
 
 async function updateUserById(user_id, updatedData) {
     try {
-        const user = await Users.findByPk(user_id)
+        const user = await User.findByPk(user_id)
         if (!user)
             return { success: false, message: 'User not found!' }
 
@@ -144,7 +144,7 @@ async function updateUserById(user_id, updatedData) {
 
 async function deleteUserById(id) {
     try {
-        const user = await Users.destroy({ where: { id } })
+        const user = await User.destroy({ where: { id } })
         
         return user ? 
             { success: true, message: 'User got deleted!' } : 

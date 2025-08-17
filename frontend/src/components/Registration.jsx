@@ -77,10 +77,7 @@ export default function Registration() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-xl bg-white p-8 rounded-2xl shadow-2xl animate-slideUp border border-gray-100">
           <div className="flex justify-center mb-6">
-            <img
-              src="https://instaily.com/_next/static/media/test.b3910688.jpg"
-              alt="SkillHatch Logo"
-              className="h-28 rounded-full object-cover border-4 border-gray-100 shadow-md"
+            <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="SkillHatch Logo" className="h-28 rounded-full object-cover border-4 border-gray-100 shadow-md"
             />
           </div>
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Create Your Account</h2>

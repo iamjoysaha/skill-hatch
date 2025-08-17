@@ -1,7 +1,8 @@
 import { sequelize } from '../config/database.js'
 import { DataTypes } from 'sequelize'
+import User from './User.js'
 
-const Connections = sequelize.define('Connections', {
+const Connection = sequelize.define('connection_model', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -22,28 +23,32 @@ const Connections = sequelize.define('Connections', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
+  accepted_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   // foreign keys
   student_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'users',
+      model: User,
       key: 'id',
     },
     onDelete: 'CASCADE',
   },
   mentor_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
-      model: 'users',
+      model: User,
       key: 'id',
     },
     onDelete: 'CASCADE',
   },
 }, {
   timestamps: true,
-  tableName: 'connections',
+  tableName: 'connection',
   indexes: [
     { name: 'student_id_index', fields: ['student_id'] },
     { name: 'mentor_id_index', fields: ['mentor_id'] },
@@ -58,4 +63,4 @@ const Connections = sequelize.define('Connections', {
   }
 })
 
-export default Connections
+export default Connection

@@ -17,17 +17,18 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
   const [contacts, setContacts] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Dynamic configuration based on user role
   const config = {
     student: {
       endpoint: "/user/mentors",
       title: "Mentor Chats",
-      emptyMessage: "Select a mentor to start chatting"
+      emptyMessage: "Select a mentor to start chatting",
+      noContacts: "No mentors available right now"
     },
     mentor: {
-      endpoint: "/user/students", 
+      endpoint: "/user/students",
       title: "Chat With Students",
-      emptyMessage: "Select a student to start chatting"
+      emptyMessage: "Select a student to start chatting",
+      noContacts: "No students available right now"
     }
   };
 
@@ -37,21 +38,25 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}${config[userRole].endpoint}`
         );
-        
+
         const now = new Date();
         const contactsData = res.data.mentors || res.data.students || res.data;
-        
+
         const enriched = contactsData.map(contact => {
           const lastActive = new Date(contact.last_active_at);
           const diffMin = (now - lastActive) / 60000;
           return {
             ...contact,
             online: contact.status === "active" && diffMin < 60,
-            lastActive: diffMin < 1 ? "just now" : 
-                       diffMin < 60 ? `${Math.floor(diffMin)} min ago` : 
-                       `${Math.floor(diffMin / 60)} hr ago`
+            lastActive:
+              diffMin < 1
+                ? "just now"
+                : diffMin < 60
+                ? `${Math.floor(diffMin)} min ago`
+                : `${Math.floor(diffMin / 60)} hr ago`
           };
         });
+
         setContacts(enriched);
       } catch (err) {
         console.error("Failed to fetch contacts", err);
@@ -64,9 +69,9 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
   }, [userRole]);
 
   useEffect(() => {
-    messagesRef.current?.scrollTo({ 
-      top: messagesRef.current.scrollHeight, 
-      behavior: "smooth" 
+    messagesRef.current?.scrollTo({
+      top: messagesRef.current.scrollHeight,
+      behavior: "smooth"
     });
   }, [messages, typingUsers, selectedContact]);
 
@@ -90,16 +95,15 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
         [partnerId]: [...(prev[partnerId] || []), newMsg]
       }));
 
-      // Handle unread counts and notifications
       if (!selectedContact || selectedContact.id !== partnerId) {
         setUnreadCounts(prev => ({
           ...prev,
           [partnerId]: (prev[partnerId] || 0) + 1
         }));
-        
+
         if (from !== userId && messageSoundRef.current) {
           messageSoundRef.current.currentTime = 0;
-          messageSoundRef.current.play().catch(err => 
+          messageSoundRef.current.play().catch(err =>
             console.error("Sound error", err)
           );
         }
@@ -131,14 +135,14 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
     };
   }, [socket, selectedContact, userId, userRole]);
 
-  const handleTyping = (e) => {
+  const handleTypingInput = e => {
     const val = e.target.value;
     setMessage(val);
-    
+
     if (!selectedContact || !socket) return;
 
     socket.emit("typing", { to: selectedContact.id, from: userId });
-    
+
     if (typingTimeout.current) clearTimeout(typingTimeout.current);
     typingTimeout.current = setTimeout(() => {
       socket.emit("stop_typing", { to: selectedContact.id, from: userId });
@@ -148,17 +152,17 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
   const handleSendMessage = () => {
     if (!message.trim() || !selectedContact || !socket) return;
 
-    const timestamp = new Date().toLocaleTimeString([], { 
-      hour: "2-digit", 
-      minute: "2-digit" 
+    const timestamp = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
     });
-    
-    const newMsg = { 
-      id: Date.now() + Math.random(), 
-      contactId: selectedContact.id, 
-      sender: "You", 
-      text: message, 
-      timestamp 
+
+    const newMsg = {
+      id: Date.now() + Math.random(),
+      contactId: selectedContact.id,
+      sender: "You",
+      text: message,
+      timestamp
     };
 
     setMessages(prev => ({
@@ -166,86 +170,102 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
       [selectedContact.id]: [...(prev[selectedContact.id] || []), newMsg]
     }));
 
-    socket.emit("send_message", { 
-      from: userId, 
-      to: selectedContact.id, 
-      text: message, 
-      timestamp 
+    socket.emit("send_message", {
+      from: userId,
+      to: selectedContact.id,
+      text: message,
+      timestamp
     });
-    
+
     socket.emit("stop_typing", { to: selectedContact.id, from: userId });
     setMessage("");
     setShowEmojiPicker(false);
   };
 
-  const handleEmojiClick = (emojiData) => {
+  const handleEmojiClick = emojiData => {
     setMessage(prev => prev + emojiData.emoji);
   };
 
-  const selectedMessages = selectedContact ? messages[selectedContact.id] || [] : [];
+  const selectedMessages = selectedContact
+    ? messages[selectedContact.id] || []
+    : [];
   const isTyping = selectedContact && typingUsers[selectedContact.id];
 
   return (
     <div className="h-[calc(100vh-80px)] flex flex-col bg-white">
       <audio ref={messageSoundRef} src={notifySound} preload="auto" />
-      
+
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className={`absolute sm:static inset-0 bg-white sm:w-80 transition-transform duration-300 z-10 ${
-          selectedContact ? "translate-x-full sm:translate-x-0" : "translate-x-0"
-        }`}>
+        <aside
+          className={`absolute sm:static inset-0 bg-white sm:w-80 transition-transform duration-300 z-10 ${
+            selectedContact ? "translate-x-full sm:translate-x-0" : "translate-x-0"
+          }`}
+        >
           <header className="p-4 shadow bg-white flex items-center gap-3 sticky top-0 z-10">
             {selectedContact && (
-              <button 
-                onClick={() => setSelectedContact(null)} 
+              <button
+                onClick={() => setSelectedContact(null)}
                 className="sm:hidden text-gray-500"
               >
                 <i className="fas fa-arrow-left text-lg" />
               </button>
             )}
             <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <i className="fas fa-comments" /> 
+              <i className="fas fa-comments" />
               {config[userRole].title}
             </h2>
           </header>
-          
+
           <div className="overflow-y-auto h-full pb-20">
-            {contacts.map(contact => (
-              <div
-                key={contact.id}
-                onClick={() => {
-                  setSelectedContact(contact);
-                  setUnreadCounts(prev => ({ ...prev, [contact.id]: 0 }));
-                }}
-                className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition ${
-                  selectedContact?.id === contact.id ? "bg-blue-50" : ""
-                }`}
-              >
-                <div className="relative">
-                  <img 
-                    src={contact.profile_image || "https://instaily.com/_next/static/media/test.b3910688.jpg"} 
-                    className="w-10 h-10 rounded-full object-cover" 
-                    alt={`${contact.first_name} ${contact.last_name}`}
-                  />
-                  {contact.online && (
-                    <span className="absolute -top-1 -left-1 w-3 h-3 bg-green-400 border-2 border-white rounded-full" />
-                  )}
-                  {unreadCounts[contact.id] > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {unreadCounts[contact.id]}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <p className="font-medium text-gray-800">
-                    {contact.first_name} {contact.last_name}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {contact.online ? "Online" : `Last seen ${contact.lastActive}`}
-                  </p>
-                </div>
+            {contacts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center text-gray-500 py-20 px-4 text-center">
+                <i className="fas fa-user-slash text-4xl mb-3"></i>
+                <p className="text-sm">{config[userRole].noContacts}</p>
               </div>
-            ))}
+            ) : (
+              contacts.map(contact => (
+                <div
+                  key={contact.id}
+                  onClick={() => {
+                    setSelectedContact(contact);
+                    setUnreadCounts(prev => ({ ...prev, [contact.id]: 0 }));
+                  }}
+                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition ${
+                    selectedContact?.id === contact.id ? "bg-blue-50" : ""
+                  }`}
+                >
+                  <div className="relative">
+                    <img
+                      src={
+                        contact.profile_image ||
+                        "https://instaily.com/_next/static/media/test.b3910688.jpg"
+                      }
+                      className="w-10 h-10 rounded-full object-cover"
+                      alt={`${contact.first_name} ${contact.last_name}`}
+                    />
+                    {contact.online && (
+                      <span className="absolute -top-1 -left-1 w-3 h-3 bg-green-400 border-2 border-white rounded-full" />
+                    )}
+                    {unreadCounts[contact.id] > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {unreadCounts[contact.id]}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      {contact.first_name} {contact.last_name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {contact.online
+                        ? "Online"
+                        : `Last seen ${contact.lastActive}`}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </aside>
 
@@ -256,9 +276,12 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
               <header className="p-[10px] shadow bg-white flex justify-between items-center">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <img 
-                      src={selectedContact.profile_image || "https://instaily.com/_next/static/media/test.b3910688.jpg"} 
-                      className="w-10 h-10 rounded-full object-cover" 
+                    <img
+                      src={
+                        selectedContact.profile_image ||
+                        "https://instaily.com/_next/static/media/test.b3910688.jpg"
+                      }
+                      className="w-10 h-10 rounded-full object-cover"
                       alt={`${selectedContact.first_name} ${selectedContact.last_name}`}
                     />
                     {selectedContact.online && (
@@ -270,34 +293,43 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
                       {selectedContact.first_name} {selectedContact.last_name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {selectedContact.online ? "Online" : `Last seen ${selectedContact.lastActive}`}
+                      {selectedContact.online
+                        ? "Online"
+                        : `Last seen ${selectedContact.lastActive}`}
                     </p>
                   </div>
                 </div>
-                <button 
-                  onClick={() => setSelectedContact(null)} 
+                <button
+                  onClick={() => setSelectedContact(null)}
                   className="text-gray-500 hover:text-red-500 text-xl"
                 >
                   <i className="fas fa-times" />
                 </button>
               </header>
 
-              <div ref={messagesRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
-                <div className="flex justify-center text-xs text-gray-500">Today</div>
+              <div
+                ref={messagesRef}
+                className="flex-1 overflow-y-auto px-4 py-3 space-y-4"
+              >
+                <div className="flex justify-center text-xs text-gray-500">
+                  Today
+                </div>
                 {selectedMessages.map(msg => (
-                  <div 
-                    key={msg.id} 
+                  <div
+                    key={msg.id}
                     className={`max-w-[70%] px-4 py-3 rounded-xl shadow-md ${
-                      msg.sender === "You" 
-                        ? "ml-auto bg-yellow-100" 
+                      msg.sender === "You"
+                        ? "ml-auto bg-yellow-100"
                         : "mr-auto bg-white"
                     }`}
                   >
                     <p className="text-gray-700">{msg.text}</p>
-                    <span className="block mt-1 text-xs text-gray-500">{msg.timestamp}</span>
+                    <span className="block mt-1 text-xs text-gray-500">
+                      {msg.timestamp}
+                    </span>
                   </div>
                 ))}
-                
+
                 {isTyping && (
                   <div className="max-w-[70%] px-4 py-3 rounded-xl shadow-md mr-auto bg-white text-left">
                     <div className="flex items-center gap-1">
@@ -305,14 +337,16 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
                       <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
                       <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]" />
                     </div>
-                    <span className="block mt-1 text-xs text-gray-400">Typing...</span>
+                    <span className="block mt-1 text-xs text-gray-400">
+                      Typing...
+                    </span>
                   </div>
                 )}
               </div>
 
               <footer className="p-4 bg-white shadow-inner flex items-center gap-2 relative">
-                <button 
-                  onClick={() => setShowEmojiPicker(p => !p)} 
+                <button
+                  onClick={() => setShowEmojiPicker(p => !p)}
                   className="text-xl px-2"
                 >
                   😊
@@ -325,8 +359,10 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
                 <input
                   type="text"
                   value={message}
-                  onChange={handleTyping}
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+                  onChange={handleTypingInput}
+                  onKeyDown={e =>
+                    e.key === "Enter" && !e.shiftKey && handleSendMessage()
+                  }
                   placeholder="Type a message..."
                   className="flex-1 px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 />
@@ -342,7 +378,9 @@ export default function UnifiedChats({ socket, userRole = "student" }) {
           ) : (
             <div className="sm:flex hidden flex-1 flex-col items-center justify-center text-gray-500 text-center px-4">
               <i className="fas fa-comments text-5xl mb-4 animate-pulse" />
-              <p className="text-lg font-medium">{config[userRole].emptyMessage}</p>
+              <p className="text-lg font-medium">
+                {config[userRole].emptyMessage}
+              </p>
             </div>
           )}
         </main>

@@ -2,7 +2,6 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
 dotenv.config()
 
-// for localhost
 const sequelize = new Sequelize({
     database: process.env.DATABASE_NAME,
     username: process.env.DATABASE_USER,
