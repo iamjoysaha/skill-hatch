@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import bcrypt from 'bcrypt'
-import { User } from '../models/index.js'
+import { Roadmap, User } from '../models/index.js'
 
 async function createUser({ first_name, last_name, college_name, roll_no, email, username, password, account_type, expertise }) {
     try {
@@ -156,6 +156,23 @@ async function deleteUserById(id) {
     }
 }
 
+async function getBadgesByUserId(user_id) {
+  if (!user_id) {
+    return { success: false, message: "User ID is required" }
+  }
+
+  try {
+    const roadmaps = await Roadmap.findAll({ where: { user_id, status: "completed" } })
+    const badges = roadmaps.map(roadmap => roadmap.badge).filter(badge => badge)
+    return { success: true, badges }
+  } 
+  catch (error) {
+    console.error(error)
+    console.log("\n:::Exception occurred inside getBadgesByUserId! :::\n")
+    return { success: false, message: "Failed to retrieve badges" }
+  }
+}
+
 export {
     createUser,
     loginUser,
@@ -166,4 +183,5 @@ export {
     getUserById,
     updateUserById,
     deleteUserById,
+    getBadgesByUserId,
 }

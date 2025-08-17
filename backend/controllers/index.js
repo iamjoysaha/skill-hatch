@@ -8,12 +8,15 @@ import {
     getUserById,
     updateUserById,
     deleteUserById,
+    getBadgesByUserId,
 } from './userController.js'
 
 import { 
     createRoadmap,
     getRoadmapsByUserId,
+    getRoadmapById,
     deleteRoadmapById,
+    updateRoadmapById,
 } from './roadmapController.js'
 
 export {
@@ -28,5 +31,8 @@ export {
     deleteUserById,
     createRoadmap,
     getRoadmapsByUserId,
+    getRoadmapById,
     deleteRoadmapById,
+    updateRoadmapById,
+    getBadgesByUserId,
 }

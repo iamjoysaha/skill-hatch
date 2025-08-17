@@ -10,6 +10,7 @@ import {
   loginUser,
   updateLastActive,
   updateUserById,
+  getBadgesByUserId,
 } from '../controllers/index.js'
 import { User } from '../models/index.js'
 import { upload, updateCloudinaryImage, deleteCloudinaryImage } from '../services/cloudinary.js'
@@ -174,5 +175,12 @@ router.post('/delete', async (req, res) => {
     return res.status(200).json({ success, message })
 })
 
+router.get('/badges', async (req, res) => {
+  const { id } = req.query
+  const { success, message, badges } = await getBadgesByUserId(id)
+
+  return success ? res.status(200).json({ success, message, badges }) : 
+    res.status(400).json({ success, message })
+})
 
 export default router

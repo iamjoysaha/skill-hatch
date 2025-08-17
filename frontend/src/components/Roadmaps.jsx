@@ -15,36 +15,65 @@ function Roadmaps() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const toggleTaskStatus = (roadmapIndex, taskIndex) => {
-    setRoadmaps((prev) =>
-      prev.map((roadmap, rIdx) => {
-        if (rIdx !== roadmapIndex) return roadmap;
+  const toggleTaskStatus = async (roadmapIndex, taskIndex) => {
+    const roadmap = roadmaps[roadmapIndex];
+    if (!roadmap) 
+      return;
 
-        const updatedTasks = roadmap.tasks.map((task, tIdx) => {
-          if (tIdx === taskIndex) {
-            return {
-              ...task,
-              status:
-                task.status.toLowerCase() === "completed"
-                  ? "Pending"
-                  : "Completed",
-            };
-          }
-          return task;
-        });
+    const updatedTasks = roadmap.tasks.map((task, tIdx) => {
+      if (tIdx === taskIndex) {
+        return {
+          ...task,
+          status:
+            task.status.toLowerCase() === "completed"
+              ? "Pending"
+              : "Completed",
+        };
+      }
+      return task;
+    });
 
-        const newEarnedXP = updatedTasks
-          .filter((task) => task.status === "Completed")
-          .reduce((sum, task) => sum + task.xp, 0);
+    const newEarnedXP = updatedTasks.filter((task) => task.status.toLowerCase() === "completed").reduce((sum, task) => sum + task.xp, 0);
+    const totalXP = updatedTasks.reduce((sum, task) => sum + task.xp, 0);
+    const allCompleted = newEarnedXP === totalXP;
+    const roadmapStatus = allCompleted ? "completed" : "pending";
+    const badge = allCompleted ? roadmap.badge : roadmap.badge;
 
-        setEarnedXP((prevXP) => ({
-          ...prevXP,
-          [rIdx]: newEarnedXP,
-        }));
+    try {
+      const { data } = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/roadmap/update/${roadmap.id}`, {
+          task_id: roadmap.tasks[taskIndex].id,
+          task_status: updatedTasks[taskIndex].status,
+          roadmap_status: roadmapStatus,
+          badge: badge,
+          total_points: totalXP,
+          earned_points: newEarnedXP,
+        }
+      );
 
-        return { ...roadmap, tasks: updatedTasks };
-      })
-    );
+      if (!data.success) {
+        toast.error(data.message || "Failed to update roadmap");
+        return;
+      }
+
+      setRoadmaps((prev) =>
+        prev.map((r, rIdx) =>
+          rIdx === roadmapIndex
+            ? { ...r, tasks: updatedTasks, status: roadmapStatus }
+            : r
+        )
+      );
+
+      setEarnedXP((prevXP) => ({
+        ...prevXP,
+        [roadmapIndex]: newEarnedXP,
+      }));
+
+      toast.success("Task Updated!");
+    } 
+    catch (error) {
+      console.error("Error updating roadmap:", error);
+      toast.error("Error updating roadmap");
+    }
   };
 
   useEffect(() => {
@@ -54,6 +83,7 @@ function Roadmaps() {
         const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/roadmap/roadmaps`, { params: { user_id } })
 
         if (data.success && data.roadmaps.length > 0) {
+          console.log("Fetched roadmaps:", data.roadmaps);
           setRoadmaps(data.roadmaps);
 
           const xpMap = {};
@@ -106,7 +136,7 @@ function Roadmaps() {
       {/* Filters Section */}
       <div className="md:w-80 bg-white shadow-lg p-6 md:sticky md:top-0">
         <div className="flex justify-between items-center mb-4 md:mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Apply Filters</h3>
+          <h3 className="text-xl font-semibold text-gray-800">Find Your Roadmaps Here!</h3>
           <button
             className="md:hidden text-gray-600"
             onClick={() => setIsFilterOpen(!isFilterOpen)}

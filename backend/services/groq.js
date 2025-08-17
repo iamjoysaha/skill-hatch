@@ -17,6 +17,7 @@ async function getQuestionAnswer(question) {
           "description": "string (roadmap description)",
           "duration_weeks": number,
           "tasks": [{
+            "id": " random 3 digit number, datatype should be number (unique task ID)",
             "week": number,
             "task": "string (what the user should do)",
             "xp": number (estimated XP for this task),
@@ -26,7 +27,7 @@ async function getQuestionAnswer(question) {
           "status": string ("Pending" | "Completed") default to "Pending",
           "badge": {
             "title": "string (badge title related to roadmap title)",
-            "icon": "string (FontAwesome class, e.g., fa-code, fa-database)",
+            "image": "string (URL of the badge image)"
           }
         }
 

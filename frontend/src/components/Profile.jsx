@@ -49,6 +49,11 @@ export default function Profile() {
           params: { user_id },
         });
 
+        const { data: badgesData } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/badges`, { params: { id: user_id }})
+
+        console.log("Badges data fetched:", badgesData.badges);
+        // {icons: '', title: }
+
         if (data.success) {
           const user = data.user;
           console.log("User data fetched successfully:", user);
@@ -70,7 +75,7 @@ export default function Profile() {
             joined: new Date(user.createdAt).toLocaleDateString(),
             level: user?.badge_count > 10 ? "Intermediate" : user?.badge_count > 20 ? "Advanced" : "Beginner",
             total_badges: user.badge_count || 0,
-            badges: user.badges || [],
+            badges: badgesData.badges || [],
           });
         }
       } catch (error) {
@@ -323,22 +328,26 @@ export default function Profile() {
           </div>
 
           <div className="p-6 bg-white rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Achievements</h3>
-            <div className="flex flex-wrap gap-2">
-              {userMeta?.badges && userMeta.badges?.length > 0 ? (
-                userMeta.badges.map((badge, idx) => (
-                  <span 
-                    key={idx} 
-                    className="bg-yellow-400 text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer"
-                  >
-                    {badge}
-                  </span>
-                ))
-              ) : (
-                <span className="text-gray-500">No badges earned yet</span>
-              )}
-            </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Achievements</h3>
+          <div className="flex flex-wrap gap-2">
+            {userMeta?.badges && userMeta.badges.length > 0 ? (
+              userMeta.badges.map((badge, idx) => (
+                <div 
+                  key={idx} 
+                  className="flex items-center gap-2 bg-yellow-400 text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer"
+                >
+                  {badge.icons && (
+                    <img src={badge.icons} alt={badge.title} className="w-4 h-4" />
+                  )}
+                  {badge.title}
+                </div>
+              ))
+            ) : (
+              <span className="text-gray-500">No badges earned yet</span>
+            )}
           </div>
+        </div>
+
         </div>
 
         <div className="mt-8 flex flex-col gap-3">

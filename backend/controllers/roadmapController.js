@@ -34,6 +34,25 @@ async function getRoadmapsByUserId(user_id) {
   }
 }
 
+async function getRoadmapById(id) {
+  if (!id) {
+    return { success: false, message: "Roadmap ID is required" }
+  }
+
+  try {
+    const roadmap = await Roadmap.findByPk(id)
+    if (!roadmap)
+      return { success: false, message: "Roadmap not found" }
+
+    return { success: true, roadmap }
+  } 
+  catch (error) {
+    console.error(error)
+    console.log("\n:::Exception occurred inside getRoadmapById! :::\n")
+    return { success: false, message: "Failed to retrieve roadmap" }
+  }
+}
+
 async function deleteRoadmapById(id) {
   if (!id) {
     return { success: false, message: "Roadmap ID is required" }
@@ -53,8 +72,29 @@ async function deleteRoadmapById(id) {
   }
 }
 
+async function updateRoadmapById(id, updates) {
+  if (!id || !updates || Object.keys(updates).length === 0) {
+    return { success: false, message: "Roadmap ID and updates are required" }
+  }
+
+  try {
+    const [updated] = await Roadmap.update(updates, { where: { id } })
+    if (updated)
+      return { success: true, message: "Roadmap updated successfully" }
+
+    return { success: false, message: "Roadmap not found" }
+  }
+  catch (error) {
+    console.error(error)
+    console.log("\n:::Exception occurred inside updateRoadmapById! :::\n")
+    return { success: false, message: "Failed to update roadmap" }
+  }
+}
+
 export { 
   createRoadmap,
   getRoadmapsByUserId,
+  getRoadmapById,
   deleteRoadmapById,
+  updateRoadmapById,
 }
