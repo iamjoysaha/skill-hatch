@@ -19,6 +19,13 @@ import {
     updateRoadmapById,
 } from './roadmapController.js'
 
+import {
+    createConnection,
+    getConnectionStatus,
+    updateConnectionStatus,
+    deleteConnection,
+} from './connectionController.js'
+
 export {
     createUser,
     loginUser,
@@ -35,4 +42,8 @@ export {
     deleteRoadmapById,
     updateRoadmapById,
     getBadgesByUserId,
+    createConnection,
+    getConnectionStatus,
+    updateConnectionStatus,
+    deleteConnection,
 }

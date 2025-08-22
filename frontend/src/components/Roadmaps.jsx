@@ -136,7 +136,9 @@ function Roadmaps() {
       {/* Filters Section */}
       <div className="md:w-80 bg-white shadow-lg p-6 md:sticky md:top-0">
         <div className="flex justify-between items-center mb-4 md:mb-6">
-          <h3 className="text-xl font-semibold text-gray-800">Find Your Roadmaps Here!</h3>
+          <h3 className="text-4xl md:text-2xl font-extrabold text-center mb-10 text-gray-800 tracking-tight">
+            Find Your Roadmaps Here!
+          </h3>
           <button
             className="md:hidden text-gray-600"
             onClick={() => setIsFilterOpen(!isFilterOpen)}

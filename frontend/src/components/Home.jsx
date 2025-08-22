@@ -31,9 +31,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10 text-center tracking-tight">
-        Welcome to Your Learning Hub
-      </h2>
+      <h3 className="text-4xl md:text-5xl font-extrabold text-center mb-10 text-gray-800 tracking-tight">
+        Welcome to Skill Hatch!
+      </h3>
 
       {/* Grid layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
