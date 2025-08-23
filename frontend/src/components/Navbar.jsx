@@ -67,7 +67,7 @@ export default function Navbar() {
             <NavItem to="/user/roadmaps" label="Roadmaps" active={location.pathname === '/user/roadmaps'} />
             <NavItem to="/user/mentors" label="Mentors" active={location.pathname === '/user/mentors'} />
             <NavItem to="/user/chats" label="Chats" active={location.pathname === '/user/chats'} />
-            <NavItem to="/user/news" label="News & Announcements" active={location.pathname === '/user/news'} />
+            <NavItem to="/user/community" label="Community" active={location.pathname === '/user/community'} />
           </div>
 
           {/* Profile + Logout */}
@@ -119,7 +119,7 @@ export default function Navbar() {
             <NavItem to="/user/roadmaps" label="Roadmaps" mobile active={location.pathname === '/user/roadmaps'} />
             <NavItem to="/user/mentors" label="Mentors" mobile active={location.pathname === '/user/mentors'} />
             <NavItem to="/user/chats" label="Chats" mobile active={location.pathname === '/user/chats'} />
-            <NavItem to="/user/news" label="News & Announcements" mobile active={location.pathname === '/user/news'} />
+            <NavItem to="/user/community" label="Community" mobile active={location.pathname === '/user/community'} />
             <button
               onClick={handleLogout}
               className="w-full px-4 py-2 rounded-lg text-sm font-semibold bg-yellow-400 text-gray-900 hover:bg-yellow-500 transition-colors duration-300"

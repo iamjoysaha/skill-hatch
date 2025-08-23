@@ -65,8 +65,8 @@ async function deleteConnection(student_id, mentor_id) {
 }
 
 export {
-    createConnection,
-    getConnectionStatus,
-    updateConnectionStatus,
-    deleteConnection,
+  createConnection,
+  getConnectionStatus,
+  updateConnectionStatus,
+  deleteConnection,
 }

@@ -11,7 +11,7 @@ import Layout from './Layout'
 import RoadmapGenerator from './RoadmapGenerator'
 import Roadmaps from './Roadmaps'
 import Mentors from './Mentors'
-import News from './News'
+import Community from './Community'
 import Unauthorized from './Unauthorized'
 import Dashboard from './admin/Dashboard'
 import UnifiedChats from './UnifiedChats'
@@ -30,7 +30,7 @@ export {
     RoadmapGenerator,
     Roadmaps,
     Mentors,
-    News,
+    Community,
     Dashboard,
     Unauthorized,
     UnifiedChats,

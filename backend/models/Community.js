@@ -16,6 +16,14 @@ const Community = sequelize.define('community_model', {
     type: DataTypes.TEXT('long'),
     allowNull: false,
   },
+  type: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  code: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true,
+  },
   link: {
     type: DataTypes.TEXT('long'),
     allowNull: true,

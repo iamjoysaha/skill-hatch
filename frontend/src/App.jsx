@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { io } from 'socket.io-client'
 import { AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Home, Login, Profile, ProtectedRoute, Registration, Layout, RoadmapGenerator, Roadmaps, Mentors, News, Dashboard, UnifiedChats } from './components/index'
+import { Home, Login, Profile, ProtectedRoute, Registration, Layout, RoadmapGenerator, Roadmaps, Mentors, Dashboard, UnifiedChats, Community } from './components/index'
 import AdminLayout from './components/admin/AdminLayout'
 
 function App() {
@@ -24,6 +24,7 @@ function App() {
     })
     
     newSocket.on('disconnect', () => {
+      console.log(`User disconnected: ${newSocket.id}`)
       localStorage.removeItem('socketId')
       localStorage.removeItem('userId')
     })
@@ -49,7 +50,7 @@ function App() {
             <Route path="chats" element={<UnifiedChats socket={socket} userRole="student" />} />
             <Route path="roadmaps" element={<Roadmaps />} />
             <Route path="mentors" element={<Mentors />} />
-            <Route path="news" element={<News />} />
+            <Route path="community" element={<Community />} />
           </Route>
 
           {/* for admin */}

@@ -26,6 +26,15 @@ import {
     deleteConnection,
 } from './connectionController.js'
 
+import {
+    addContent,
+    getContents,
+    getContentsByType,
+    getContentsByUserId,
+    deleteContent,
+    updateContent,
+} from './communityController.js'
+
 export {
     createUser,
     loginUser,
@@ -46,4 +55,10 @@ export {
     getConnectionStatus,
     updateConnectionStatus,
     deleteConnection,
+    addContent,
+    getContents,
+    getContentsByType,
+    getContentsByUserId,
+    deleteContent,
+    updateContent,
 }
