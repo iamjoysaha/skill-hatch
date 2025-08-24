@@ -22,6 +22,8 @@ import {
 import {
     createConnection,
     getConnectionStatus,
+    getConnectionStatusForUsers,
+    getAcceptedConnections,
     updateConnectionStatus,
     deleteConnection,
 } from './connectionController.js'
@@ -53,6 +55,8 @@ export {
     getBadgesByUserId,
     createConnection,
     getConnectionStatus,
+    getConnectionStatusForUsers,
+    getAcceptedConnections,
     updateConnectionStatus,
     deleteConnection,
     addContent,

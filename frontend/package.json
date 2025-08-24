@@ -25,6 +25,7 @@
     "emoji-picker-react": "^4.12.3",
     "framer-motion": "^12.20.5",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.541.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",

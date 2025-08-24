@@ -54,7 +54,12 @@ function configSocketIO(httpServer) {
         socket.on('disconnect', () => {
             Object.keys(userSocketMap).forEach(userId => {
                 if (userSocketMap[userId] === socket.id) {
-                    delete userSocketMap[userId]
+                    setTimeout(() => {
+                        if (userSocketMap[userId] === socket.id) {
+                            delete userSocketMap[userId]
+                            console.log(`Session expired for user: ${userId}`)
+                        }
+                    }, 24 * 60 * 60 * 1000); // 1 day in ms
                 }
             })
             console.log(`::: User disconnected: ${socket.id}`)

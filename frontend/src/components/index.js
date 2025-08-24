@@ -13,8 +13,13 @@ import Roadmaps from './Roadmaps'
 import Mentors from './Mentors'
 import Community from './Community'
 import Unauthorized from './Unauthorized'
-import Dashboard from './admin/Dashboard'
 import UnifiedChats from './UnifiedChats'
+
+import Dashboard from './admin/Dashboard'
+import Contributions from './admin/Contributions'
+import Posts from './admin/Posts'
+import Requests from './admin/Requests'
+import Settings from './admin/Settings'
 
 export {
     Navbar,
@@ -31,7 +36,12 @@ export {
     Roadmaps,
     Mentors,
     Community,
-    Dashboard,
     Unauthorized,
     UnifiedChats,
+
+    Dashboard,
+    Contributions,
+    Posts,
+    Requests,
+    Settings,
 }

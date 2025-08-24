@@ -15,17 +15,32 @@ async function createConnection(student_id, mentor_id, requested_at) {
   }
 }
 
-async function getConnectionStatus(student_id, mentor_id) {
+async function getConnectionStatus(mentor_id) {
+  try {
+    const connections = await Connection.findAll({ where: { mentor_id } });
+    if (!connections.length)
+        return { success: false, message: "No connection found" }
+    
+    return { success: true, connections }
+  } 
+  catch (error) {
+    console.error(error);
+    console.log("\n:::Exception occurred inside getConnectionStatus! :::\n");
+    return { success: false, message: "Failed to retrieve connection status" };
+  }
+}
+
+async function getConnectionStatusForUsers(student_id, mentor_id) {
   try {
     const data = await Connection.findOne({ where: { student_id, mentor_id } });
     if (!data)
         return { success: false, message: "No connection found" }
     
-    return { success: true, message: "Connection status retrieved successfully", data }
+    return { success: true, data }
   } 
   catch (error) {
     console.error(error);
-    console.log("\n:::Exception occurred inside getConnectionStatus! :::\n");
+    console.log("\n:::Exception occurred inside getConnectionStatusForUsers! :::\n");
     return { success: false, message: "Failed to retrieve connection status" };
   }
 }
@@ -36,7 +51,7 @@ async function updateConnectionStatus(student_id, mentor_id, status, is_connecte
       is_connected = true
       accepted_at = new Date()
     }
-    const data = await Connection.update({ status, accepted_at, is_connected }, { where: { student_id, mentor_id } })
+    const data = await Connection.update({ status, accepted_at, is_connected }, { where: { student_id, mentor_id }, validate: false })
     if (!data) {
       return { success: false, message: "Failed to update connection status" }
     }
@@ -64,9 +79,28 @@ async function deleteConnection(student_id, mentor_id) {
   }
 }
 
+async function getAcceptedConnections(mentor_id) {
+  try {
+    const connections = await Connection.findAll({ 
+      where: { mentor_id: Number(mentor_id), status: 'accepted' }
+    })
+    
+    if (!connections.length)
+      return { success: false, message: "No connection found" }
+    
+    return { success: true, connections }
+  } 
+  catch (error) {
+    console.error(error);
+    return { success: false, message: "Failed to retrieve connection status" };
+  }
+}
+
 export {
   createConnection,
   getConnectionStatus,
+  getConnectionStatusForUsers,
   updateConnectionStatus,
   deleteConnection,
+  getAcceptedConnections,
 }

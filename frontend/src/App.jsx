@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { io } from 'socket.io-client'
 import { AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Home, Login, Profile, ProtectedRoute, Registration, Layout, RoadmapGenerator, Roadmaps, Mentors, Dashboard, UnifiedChats, Community } from './components/index'
+import { Home, Login, Profile, ProtectedRoute, Registration, Layout, RoadmapGenerator, Roadmaps, Mentors, Dashboard, UnifiedChats, Community, Settings, Posts, Requests, Contributions } from './components/index'
 import AdminLayout from './components/admin/AdminLayout'
 
 function App() {
@@ -57,6 +57,10 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute role={'mentor'}><AdminLayout /></ProtectedRoute>}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="chats" element={<UnifiedChats socket={socket} userRole="mentor" />} />
+            <Route path="requests" element={<Requests />} />
+            <Route path="contributions" element={<Contributions />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
 
 
