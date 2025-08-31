@@ -22,10 +22,13 @@ app.use(session({ secret: process.env.SESSION_KEY, resave: false, saveUninitiali
 app.use(flash())
 // app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
 app.use(cors({
-  origin: "*",
+  origin: [
+    "https://skill-hatch.onrender.com",
+    "http://localhost:5173"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false
+  credentials: true
 }))
 
 app.use((req, res, next) => {
