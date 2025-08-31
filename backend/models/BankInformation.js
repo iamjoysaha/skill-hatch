@@ -31,9 +31,6 @@ const BankInformation = sequelize.define('bank_information_model', {
 }, {
   timestamps: true,
   tableName: 'bank_information',
-  indexes: [
-    { name: 'user_id_index', fields: ['user_id']}
-  ]
 })
 
 export default BankInformation

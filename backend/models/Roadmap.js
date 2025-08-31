@@ -64,9 +64,6 @@ const Roadmap = sequelize.define('roadmap_model', {
 }, {
   timestamps: true,
   tableName: 'roadmap',
-  indexes: [ 
-    { name: 'user_id_index', fields: ['user_id'] },
-  ]
 })
 
 export default Roadmap

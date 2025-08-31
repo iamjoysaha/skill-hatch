@@ -25,9 +25,6 @@ const Activity = sequelize.define('activity_model', {
 }, {
   timestamps: true,
   tableName: 'activity',
-  indexes: [
-    { name: 'user_id_index', fields: ['user_id'] }
-  ]
 })
 
 export default Activity

@@ -30,9 +30,6 @@ const Chat = sequelize.define('chat_model', {
 }, {
   timestamps: true,
   tableName: 'chat',
-  indexes: [
-    { name: 'connection_id_index', fields: ['connection_id'] },
-  ]
 })
 
 export default Chat

@@ -49,11 +49,6 @@ const Connection = sequelize.define('connection_model', {
 }, {
   timestamps: true,
   tableName: 'connection',
-  indexes: [
-    { name: 'student_id_index', fields: ['student_id'] },
-    { name: 'mentor_id_index', fields: ['mentor_id'] },
-    { name: 'unique_connection', unique: true, fields: ['student_id', 'mentor_id'] }
-  ],
   validate: {
     notSelfConnection() {
       if (this.student_id === this.mentor_id) {

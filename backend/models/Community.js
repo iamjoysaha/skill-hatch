@@ -49,9 +49,6 @@ const Community = sequelize.define('community_model', {
 }, {
   timestamps: true,
   tableName: 'community',
-  indexes: [
-    { name: 'user_id_index', fields: ['user_id'] },
-  ]
 })
 
 export default Community

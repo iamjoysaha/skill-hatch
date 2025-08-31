@@ -35,10 +35,6 @@ const Contribution = sequelize.define('contribution_model', {
 }, {
   timestamps: true,
   tableName: 'contribution',
-  indexes: [
-    { name: 'user_id_index', fields: ['user_id'] },
-    { name: 'connection_id_index', fields: ['connection_id'] },
-  ],
 })
 
 export default Contribution
