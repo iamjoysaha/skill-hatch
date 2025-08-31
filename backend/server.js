@@ -15,12 +15,6 @@ const app = express()
 const httpServer = createServer(app)
 
 // Middleware setup
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(cookieParser())
-app.use(session({ secret: process.env.SESSION_KEY, resave: false, saveUninitialized: false, cookie: { maxAge: 1000 * 60 * 60 * 24 } }))
-app.use(flash())
-// app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
 app.use(cors({
   origin: [
     "https://skill-hatch.onrender.com",
@@ -30,7 +24,20 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }))
-
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(cookieParser())
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    maxAge: 1000 * 60 * 60 * 24,
+    sameSite: "none",
+    secure: true
+  }
+}))
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')
     res.setHeader('Pragma', 'no-cache')
