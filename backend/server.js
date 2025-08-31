@@ -20,7 +20,14 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(session({ secret: process.env.SESSION_KEY, resave: false, saveUninitialized: false, cookie: { maxAge: 1000 * 60 * 60 * 24 } }))
 app.use(flash())
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
+// app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://skill-hatch.onrender.com"
+  ],
+  credentials: true
+}))
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')
     res.setHeader('Pragma', 'no-cache')
