@@ -10,5 +10,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    allowedHosts: [
+      'skill-hatch.onrender.com',
+      'skill-hatch-service.onrender.com'
+    ],
   },
 })
