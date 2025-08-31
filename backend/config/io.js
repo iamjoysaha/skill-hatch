@@ -6,12 +6,15 @@ let io = null
 function configSocketIO(httpServer) {
     io = new Server(httpServer, {
         cors: {
-            origin: "*",
+            origin: [
+            "https://skill-hatch.onrender.com",
+            "http://localhost:5173"
+            ],
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
             allowedHeaders: ["Content-Type", "Authorization"],
-            credentials: false
-        },
-    })
+            credentials: true
+        }
+    });
 
     const userSocketMap = {}
 
