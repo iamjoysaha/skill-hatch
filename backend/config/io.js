@@ -6,9 +6,10 @@ let io = null
 function configSocketIO(httpServer) {
     io = new Server(httpServer, {
         cors: {
-            origin: process.env.FRONTEND_URL,
-            methods: ['GET', 'POST'],
-            credentials: true,
+            origin: "*",
+            methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            allowedHeaders: ["Content-Type", "Authorization"],
+            credentials: false
         },
     })
 
