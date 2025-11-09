@@ -1,6 +1,5 @@
 import twilio from 'twilio'
 import dotenv from 'dotenv'
-import axios from 'axios'
 dotenv.config()
 
 const client = twilio(process.env.TWILIO_API_KEY_SID, process.env.TWILIO_API_KEY_SECRET, { accountSid: process.env.TWILIO_ACCOUNT_SID })

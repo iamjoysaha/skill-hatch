@@ -16,10 +16,7 @@ const httpServer = createServer(app)
 
 // Middleware setup
 app.use(cors({
-  origin: [
-    "https://skill-hatch.onrender.com",
-    "http://localhost:5173"
-  ],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
@@ -56,5 +53,5 @@ app.use('/', router)
 
 // Start server
 httpServer.listen(process.env.PORT, () => {
-    console.log(`Server started running at port: ${process.env.PORT}`)
+    console.log(`Server started running ::: http://localhost:${process.env.PORT}`)
 })

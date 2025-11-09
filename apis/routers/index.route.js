@@ -11,6 +11,6 @@ router.use('/verify', verificationRoute)
 router.use('/roadmap', roadmapsRoute)
 router.use('/connection', connectionRoute)
 router.use('/community', communityRoute)
-router.get('/', (req, res) => res.send('Welcome to the server!'))
+router.get('/', (req, res) => res.send('Welcome to skill hatch server!'))
 
 export default router
